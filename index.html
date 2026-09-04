@@ -178,10 +178,10 @@
 
   <div id="main-content">
     <div class="header-area">
-      <div class="header-title">Char-Research Gallery</div>
+      <div class="header-title">美少女キャラクターギャラリーサイト</div>
       
       <div class="sort-container">
-        <span>⇅ 並び順:</span>
+        <span>並び替え:</span>
         <select id="sort-select" class="sort-select" onchange="sortAndRender()">
           <option value="date-desc">登場時期（新しい順）</option>
           <option value="date-asc">登場時期（古い順）</option>
@@ -197,7 +197,7 @@
 
   <script>
     const SPREADSHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSd_7yNBPFl0D0UXvSbCCeUvU_9MJ4OoboLxkbsUVCxEpKe1wl1S6rrVHE5jMmujdQBu9j8KgmMlbUo/pub?output=csv"; // ★CSV URLを入力
-    const GAS_API_URL = "YOUR_GAS_WEB_APP_URL"; // ★GASのWebアプリURLを入力
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyakYOhD4h7XZTu78_v_gWs4DN6wUMCXwo_G4u8DOZif8ZfB6NhEPWq-yLrOYAaZ1fm/exec"; // ★GASのWebアプリURLを入力
 
     let allCharacterData = [];
 
@@ -280,7 +280,7 @@
           `<div class="no-img-box">NO IMAGE</div>`;
 
         const isTrend = item.type.includes('トレンド');
-        const badgeHTML = `<span class="type-badge ${isTrend ? 'badge-trend' : 'badge-manual'}">${isTrend ? '🔥 トレンド' : '📌 追跡'}</span>`;
+        const badgeHTML = `<span class="type-badge ${isTrend ? 'badge-trend' : 'badge-manual'}">${isTrend ? 'トレンド' : '手動'}</span>`;
 
         card.innerHTML = `
           <div class="card-img-wrapper">
