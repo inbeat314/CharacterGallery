@@ -151,16 +151,26 @@
     .card-meta { 
       font-size: 0.75rem; 
       color: var(--text-sub); 
-      display: flex; 
-      justify-content: space-between; 
-      align-items: center;
       background: rgba(15, 23, 42, 0.5);
-      padding: 4px 6px;
+      padding: 6px 8px;
       border-radius: 4px;
       margin-bottom: 6px;
+      display: flex;
+      flex-direction: column; /* 縦並び（改行）にする */
+      gap: 4px;               /* 1行目と2行目の間隔 */
     }
-    .rate-badge { color: var(--accent-color); font-weight: bold; }
     
+    .meta-row {
+      display: flex;
+      justify-content: space-between; /* ラベル（左）と数値（右）を揃える */
+      align-items: center;
+    }
+    
+    .rate-badge { 
+      color: var(--accent-color); 
+      font-weight: bold;
+    }
+        
     .card-sub-meta { 
       font-size: 0.7rem; 
       color: #94a3b8; 
@@ -291,17 +301,23 @@
           <div class="card-body">
             <div class="card-title">${item.title}</div>
             <div class="card-name">${item.name}</div>
-            <div class="card-meta">
-              <span>投稿数: ${item.r18}/${item.total}</span>
+         <div class="card-meta">
+            <div class="meta-row">
+              <span>投稿数:</span>
+              <span>${item.r18}/${item.total}</span>
+            </div>
+            <div class="meta-row">
+              <span>R-18率:</span>
               <span class="rate-badge">${item.r18RateStr}</span>
             </div>
+          </div>
             <div class="card-sub-meta">
               <div class="sub-meta-row">
                 <span>登場時期</span>
                 <span class="date-badge">${item.releaseDate}</span>
               </div>
               <div class="sub-meta-row">
-                <span>数値確認日</span>
+                <span>記入日時</span>
                 <span>${item.inputDate}</span>
               </div>
             </div>
