@@ -229,7 +229,9 @@
           const totalNum   = parseInt((row[3] || "0").replace(/,/g, ''), 10);
           const r18Num     = parseInt((row[4] || "0").replace(/,/g, ''), 10);
           const rateNum    = parseFloat((row[5] || "0").replace('%', '').replace(/,/g, ''));
-          const updateDate = row[8] || '未入力';
+          
+          // 種別列を消して詰め詰めの場合は row[7]、元の位置に残っている場合は row[8] をフォールバック取得
+          const updateDate = row[8] || row[7] || '未入力';
 
           allCharacterData.push({
             title:       row[0] || '作品名未設定',
