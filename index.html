@@ -215,7 +215,7 @@
     <div id="gallery-grid" class="pinterest-grid"></div>
   </div>
 
-  <script>
+<script>
     const SPREADSHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSd_7yNBPFl0D0UXvSbCCeUvU_9MJ4OoboLxkbsUVCxEpKe1wl1S6rrVHE5jMmujdQBu9j8KgmMlbUo/pub?output=csv"; // ★CSV URLを入力
     const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyakYOhD4h7XZTu78_v_gWs4DN6wUMCXwo_G4u8DOZif8ZfB6NhEPWq-yLrOYAaZ1fm/exec"; // ★GASのWebアプリURLを入力
 
@@ -225,79 +225,57 @@
       loadGalleryData();
     });
 
-   async function loadGalleryData() {
-  const debugDiv = document.getElementById('debug-msg');
-  try {
-    const response = await fetch(SPREADSHEET_CSV_URL);
-    if (!response.ok) throw new Error(`HTTPエラー! ステータス: ${response.status}`);
-    
-    const csvText = await response.text();
+    async function loadGalleryData() {
+      const debugDiv = document.getElementById('debug-msg');
+      try {
+        const response = await fetch(SPREADSHEET_CSV_URL);
+        if (!response.ok) throw new Error(`HTTPエラー! ステータス: ${response.status}`);
+        
+        const csvText = await response.text();
 
-    const rows = csvText.split(/\r?\n/).map(row => {
-      return row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(cell => cell.replace(/^"|"$/g, '').trim());
-    }).filter(row => row.length > 1 && row.some(cell => cell !== ""));
+        const rows = csvText.split(/\r?\n/).map(row => {
+          return row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(cell => cell.replace(/^"|"$/g, '').trim());
+        }).filter(row => row.length > 1 && row.some(cell => cell !== ""));
 
-    if (rows.length <= 1) {
-      if (debugDiv) debugDiv.innerText = "⚠️ データが見つかりません。スプレッドシートを確認してください。";
-      return;
-    }
+        if (rows.length <= 1) {
+          if (debugDiv) debugDiv.innerText = "⚠️ データが見つかりません。スプレッドシートを確認してください。";
+          return;
+        }
 
-    allCharacterData = [];
-    for (let i = 1; i < rows.length; i++) {
-      const row = rows[i];
-      
-      // ★カンマを削除してから数値変換（9,399 -> 9399）
-      const totalNum   = parseInt((row[3] || "0").replace(/,/g, ''), 10);
-      const r18Num     = parseInt((row[4] || "0").replace(/,/g, ''), 10);
-      const rateNum    = parseFloat((row[5] || "0").replace('%', '').replace(/,/g, ''));
-      const typeStr    = row[7] || '手動';
-      const updateDate = row[8] || '未入力';
+        allCharacterData = [];
+        for (let i = 1; i < rows.length; i++) {
+          const row = rows[i];
+          
+          // ★カンマを削除してから数値変換（9,399 -> 9399）
+          const totalNum   = parseInt((row[3] || "0").replace(/,/g, ''), 10);
+          const r18Num     = parseInt((row[4] || "0").replace(/,/g, ''), 10);
+          const rateNum    = parseFloat((row[5] || "0").replace('%', '').replace(/,/g, ''));
+          const typeStr    = row[7] || '手動';
+          const updateDate = row[8] || '未入力';
 
-      allCharacterData.push({
-        title:       row[0] || '作品名未設定',
-        name:        row[1] || '未設定',
-        imgUrl:      row[2] || '',
-        total:       totalNum,
-        r18:         r18Num,
-        r18RateRaw:  rateNum,
-        r18RateStr:  row[5] || '0%',
-        releaseDate: row[6] || '時期不明',
-        type:        typeStr,
-        inputDate:   updateDate
-      });
-    }
-
-    // 取得したデータを画面に描画（レンダリング）する関数を呼び出し
-    renderGallery(allCharacterData);
-
-  } catch (error) {
-    console.error("データ取得エラー:", error);
-    if (debugDiv) {
-      debugDiv.innerText = "⚠️ データの読み込みに失敗しました: " + error.message;
-    }
-  }
-}
-
-  allCharacterData.push({
-    title:       row[0] || '作品名未設定',
-    name:        row[1] || '未設定',
-    imgUrl:      row[2] || '',
-    total:       totalNum,
-    r18:         r18Num,
-    r18RateRaw:  rateNum,
-    r18RateStr:  row[5] || '0%',
-    releaseDate: row[6] || '時期不明',
-    type:        typeStr,
-    inputDate:   updateDate
-  });
-}
+          allCharacterData.push({
+            title:       row[0] || '作品名未設定',
+            name:        row[1] || '未設定',
+            imgUrl:      row[2] || '',
+            total:       totalNum,
+            r18:         r18Num,
+            r18RateRaw:  rateNum,
+            r18RateStr:  row[5] || '0%',
+            releaseDate: row[6] || '時期不明',
+            type:        typeStr,
+            inputDate:   updateDate
+          });
         }
 
         sortAndRender();
-        debugDiv.style.display = 'none';
+        if (debugDiv) debugDiv.style.display = 'none';
+
       } catch (err) {
-        debugDiv.style.color = '#ef4444';
-        debugDiv.innerText = "❌ エラーが発生しました:\n" + err.message;
+        console.error("データ取得エラー:", err);
+        if (debugDiv) {
+          debugDiv.style.color = '#ef4444';
+          debugDiv.innerText = "❌ エラーが発生しました:\n" + err.message;
+        }
       }
     }
 
@@ -338,16 +316,16 @@
           <div class="card-body">
             <div class="card-title">${item.title}</div>
             <div class="card-name">${item.name}</div>
-         <div class="card-meta">
-            <div class="meta-row">
-              <span>投稿数:</span>
-              <span>${item.r18}/${item.total}</span>
+            <div class="card-meta">
+              <div class="meta-row">
+                <span>投稿数:</span>
+                <span>${item.r18}/${item.total}</span>
+              </div>
+              <div class="meta-row">
+                <span>R-18率:</span>
+                <span class="rate-badge">${item.r18RateStr}</span>
+              </div>
             </div>
-            <div class="meta-row">
-              <span>R-18率:</span>
-              <span class="rate-badge">${item.r18RateStr}</span>
-            </div>
-          </div>
             <div class="card-sub-meta">
               <div class="sub-meta-row">
                 <span>登場時期</span>
