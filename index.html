@@ -104,7 +104,6 @@
       <div class="sort-container">
         <label for="sort-select">並び替え:</label>
         <select id="sort-select" class="sort-select" onchange="sortAndRender()">
-          <option value="default">スプレッドシート順</option>
           <option value="date-desc">登場時期（新しい順）</option>
           <option value="date-asc">登場時期（古い順）</option>
           <option value="rate-desc">R-18率（高い順）</option>
@@ -176,52 +175,52 @@
       }
     }
 
-    // 並び替え＆画面描画の処理
-    function sortAndRender() {
-      const sortValue = document.getElementById('sort-select').value;
-      
-      // 元データを壊さないようにコピーを作成してソート
-      let sortedData = [...allCharacterData];
+   // 並び替え＆画面描画の処理
+function sortAndRender() {
+  const sortValue = document.getElementById('sort-select').value;
+  
+  // 元データを壊さないようにコピーを作成してソート
+  let sortedData = [...allCharacterData];
 
-      if (sortValue === 'date-desc') {
-        // 登場時期（新しい順）
-        sortedData.sort((a, b) => b.releaseDate.localeCompare(a.releaseDate));
-      } else if (sortValue === 'date-asc') {
-        // 登場時期（古い順）
-        sortedData.sort((a, b) => a.releaseDate.localeCompare(b.releaseDate));
-      } else if (sortValue === 'rate-desc') {
-        // R-18率（高い順）
-        sortedData.sort((a, b) => b.r18RateRaw - a.r18RateRaw);
-      } else if (sortValue === 'total-desc') {
-        // 総投稿数（多い順）
-        sortedData.sort((a, b) => b.total - a.total);
-      }
+  if (sortValue === 'date-asc') {
+    // 登場時期（古い順）
+    sortedData.sort((a, b) => a.releaseDate.localeCompare(b.releaseDate));
+  } else if (sortValue === 'rate-desc') {
+    // R-18率（高い順）
+    sortedData.sort((a, b) => b.r18RateRaw - a.r18RateRaw);
+  } else if (sortValue === 'total-desc') {
+    // 総投稿数（多い順）
+    sortedData.sort((a, b) => b.total - a.total);
+  } else {
+    // デフォルト：登場時期（新しい順 / date-desc）
+    sortedData.sort((a, b) => b.releaseDate.localeCompare(a.releaseDate));
+  }
 
-      // カード描画
-      const grid = document.getElementById('gallery-grid');
-      grid.innerHTML = '';
+  // カード描画
+  const grid = document.getElementById('gallery-grid');
+  grid.innerHTML = '';
 
-      sortedData.forEach(item => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `
-          <img src="${item.imgUrl}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/150?text=No+Image';">
-          <div class="card-body">
-            <div class="card-title">${item.title}</div>
-            <div class="card-name">${item.name}</div>
-            <div class="card-meta">
-              <span>R18: ${item.r18}/${item.total}</span>
-              <span class="rate-badge">${item.r18RateStr}</span>
-            </div>
-            <div class="card-sub-meta">
-              <span>登場時期</span>
-              <span class="date-badge">${item.releaseDate}</span>
-            </div>
-          </div>
-        `;
-        grid.appendChild(card);
-      });
-    }
+  sortedData.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <img src="${item.imgUrl}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/150?text=No+Image';">
+      <div class="card-body">
+        <div class="card-title">${item.title}</div>
+        <div class="card-name">${item.name}</div>
+        <div class="card-meta">
+          <span>R18: ${item.r18}/${item.total}</span>
+          <span class="rate-badge">${item.r18RateStr}</span>
+        </div>
+        <div class="card-sub-meta">
+          <span>登場時期</span>
+          <span class="date-badge">${item.releaseDate}</span>
+        </div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
   </script>
 </body>
 </html>
