@@ -137,19 +137,17 @@
     }
     .delete-btn:active { background: #ef4444; }
 
-    /* カード本文（表示項目削減に伴い微調整） */
+    /* カード本文 */
     .card-body { padding: 8px; }
     .card-title { font-size: 0.7rem; color: #94a3b8; line-height: 1.2; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .card-name { font-size: 0.85rem; font-weight: bold; color: #ffffff; margin: 2px 0 0 0; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .card-name { font-size: 0.85rem; font-weight: bold; color: #ffffff; margin: 2px 0 4px 0; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     
-    /* 再実装時に使うスタイル定義（そのまま保持） */
     .card-meta { 
       font-size: 0.7rem; 
       color: var(--text-sub); 
       background: rgba(15, 23, 42, 0.5);
       padding: 4px 6px;
       border-radius: 4px;
-      margin-bottom: 4px;
       display: flex;
       flex-direction: column;
       gap: 2px;
@@ -171,6 +169,7 @@
       color: #94a3b8; 
       border-top: 1px solid var(--border-color); 
       padding-top: 4px; 
+      margin-top: 4px;
       display: flex; 
       flex-direction: column;
       gap: 2px;
@@ -301,17 +300,20 @@
             <div class="card-title" title="${item.title}">${item.title}</div>
             <div class="card-name" title="${item.name}">${item.name}</div>
             
-            <!-- 再実装時用コメントアウトエリア
             <div class="card-meta">
               <div class="meta-row">
                 <span>投稿数:</span>
                 <span>${item.r18}/${item.total}</span>
               </div>
+              <!-- R-18率の再実装用コメントアウト
               <div class="meta-row">
                 <span>R-18率:</span>
                 <span class="rate-badge">${item.r18RateStr}</span>
               </div>
+              -->
             </div>
+
+            <!-- 登場時期・記入日時の再実装用コメントアウト
             <div class="card-sub-meta">
               <div class="sub-meta-row">
                 <span>登場時期</span>
