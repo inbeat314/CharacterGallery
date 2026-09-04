@@ -187,11 +187,8 @@
       <div class="sort-container">
         <span>並び替え:</span>
         <select id="sort-select" class="sort-select" onchange="sortAndRender()">
-          <option value="date-desc">登場時期（新しい順）</option>
-          <option value="date-asc">登場時期（古い順）</option>
-          <option value="rate-desc">R-18率（高い順）</option>
-          <option value="total-desc">総投稿数（多い順）</option>
           <option value="random">ランダム</option>
+          <option value="total-desc">総投稿数（多い順）</option>
         </select>
       </div>
     </div>
@@ -200,7 +197,7 @@
     <div id="gallery-grid" class="gallery-grid"></div>
   </div>
 
-<script>
+  <script>
     const SPREADSHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSd_7yNBPFl0D0UXvSbCCeUvU_9MJ4OoboLxkbsUVCxEpKe1wl1S6rrVHE5jMmujdQBu9j8KgmMlbUo/pub?output=csv";
     const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyakYOhD4h7XZTu78_v_gWs4DN6wUMCXwo_G4u8DOZif8ZfB6NhEPWq-yLrOYAaZ1fm/exec";
 
@@ -266,19 +263,14 @@
       const sortValue = document.getElementById('sort-select').value;
       let sortedData = [...allCharacterData];
 
-      if (sortValue === 'date-asc') {
-        sortedData.sort((a, b) => a.releaseDate.localeCompare(b.releaseDate));
-      } else if (sortValue === 'rate-desc') {
-        sortedData.sort((a, b) => b.r18RateRaw - a.r18RateRaw);
-      } else if (sortValue === 'total-desc') {
+      if (sortValue === 'total-desc') {
         sortedData.sort((a, b) => b.total - a.total);
-      } else if (sortValue === 'random') {
+      } else {
+        // デフォルト: ランダム
         for (let i = sortedData.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
           [sortedData[i], sortedData[j]] = [sortedData[j], sortedData[i]];
         }
-      } else {
-        sortedData.sort((a, b) => b.releaseDate.localeCompare(a.releaseDate));
       }
 
       const grid = document.getElementById('gallery-grid');
