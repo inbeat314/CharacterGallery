@@ -233,27 +233,29 @@
         }
 
         allCharacterData = [];
-        for (let i = 1; i < rows.length; i++) {
-          const row = rows[i];
-          
-          const totalNum = parseInt(row[3] || "0", 10);
-          const r18Num   = parseInt(row[4] || "0", 10);
-          const rateNum  = parseFloat((row[5] || "0").replace('%', ''));
-          const typeStr  = row[7] || '手動';
-          const updateDate = row[8] || '未入力'; // I列: 手動入力日
+       for (let i = 1; i < rows.length; i++) {
+  const row = rows[i];
+  
+  // ★カンマを削除してから数値変換（9,399 -> 9399）
+  const totalNum = parseInt((row[3] || "0").replace(/,/g, ''), 10);
+  const r18Num   = parseInt((row[4] || "0").replace(/,/g, ''), 10);
+  const rateNum  = parseFloat((row[5] || "0").replace('%', '').replace(/,/g, ''));
+  const typeStr  = row[7] || '手動';
+  const updateDate = row[8] || '未入力';
 
-          allCharacterData.push({
-            title:       row[0] || '作品名未設定',
-            name:        row[1] || '未設定',
-            imgUrl:      row[2] || '',
-            total:       totalNum,
-            r18:         r18Num,
-            r18RateRaw:  rateNum,
-            r18RateStr:  row[5] || '0%',
-            releaseDate: row[6] || '時期不明',
-            type:        typeStr,
-            inputDate:   updateDate
-          });
+  allCharacterData.push({
+    title:       row[0] || '作品名未設定',
+    name:        row[1] || '未設定',
+    imgUrl:      row[2] || '',
+    total:       totalNum,
+    r18:         r18Num,
+    r18RateRaw:  rateNum,
+    r18RateStr:  row[5] || '0%',
+    releaseDate: row[6] || '時期不明',
+    type:        typeStr,
+    inputDate:   updateDate
+  });
+}
         }
 
         sortAndRender();
