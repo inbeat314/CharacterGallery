@@ -21,7 +21,7 @@
       background-color: var(--bg-color);
       color: var(--text-color);
     }
-    #auth-screen {
+    /* #auth-screen {
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -39,7 +39,7 @@
       max-width: 360px;
       text-align: center;
       border: 1px solid var(--border-color);
-    }
+    } */
     .auth-card h2 { margin-top: 0; font-size: 1.25rem; }
     .auth-input {
       width: 100%;
@@ -107,13 +107,13 @@
 <body>
 
   <!-- パスワード画面 -->
-  <div id="auth-screen">
+  <!-- <div id="auth-screen">
     <div class="auth-card">
       <h2>🔒 パスワードを入力</h2>
       <input type="password" id="pass-input" class="auth-input" placeholder="Password">
       <button onclick="checkAuth()" class="auth-btn">ログイン</button>
     </div>
-  </div>
+  </div> -->
 
   <!-- ギャラリー本体画面 -->
   <div id="main-content">
@@ -123,19 +123,19 @@
   </div>
 
   <script>
-    const PASSWORD = "7522"; // 設定したパスワード
+    // const PASSWORD = "7522"; // 設定したパスワード
     const SPREADSHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSd_7yNBPFl0D0UXvSbCCeUvU_9MJ4OoboLxkbsUVCxEpKe1wl1S6rrVHE5jMmujdQBu9j8KgmMlbUo/pub?output=csv"; // ★CSV URLを入力
 
-    function checkAuth() {
-      const input = document.getElementById('pass-input').value;
-      if (input === PASSWORD) {
-        document.getElementById('auth-screen').style.display = 'none';
-        document.getElementById('main-content').style.display = 'block';
-        loadGalleryData();
-      } else {
-        alert('パスワードが正しくありません');
-      }
-    }
+    // function checkAuth() {
+    //   const input = document.getElementById('pass-input').value;
+    //   if (input === PASSWORD) {
+    //     document.getElementById('auth-screen').style.display = 'none';
+    //     document.getElementById('main-content').style.display = 'block';
+    //     loadGalleryData();
+    //   } else {
+    //     alert('パスワードが正しくありません');
+    //   }
+    // }
 
     async function loadGalleryData() {
       const debugDiv = document.getElementById('debug-msg');
