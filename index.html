@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Char-Design Gallery</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #121212; color: #fff; padding-bottom: 20px; }
+    
+    /* パスワード画面 */
+    #lock-screen { position: fixed; inset: 0; background: #121212; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+    #lock-screen h2 { margin-bottom: 20px; font-size: 1.2rem; }
+    #lock-screen input { padding: 12px; font-size: 16px; border-radius: 8px; border: 1px solid #333; background: #222; color: #fff; text-align: center; margin-bottom: 12px; width: 200px; }
+    #lock-screen button { padding: 10px 24px; font-size: 15px; border-radius: 20px; border: none; background: #e60023; color: #fff; font-weight: bold; cursor: pointer; }
+
+    /* ヘッダー・操作エリア */
+    header { position: sticky; top: 0; background: rgba(18, 18, 18, 0.95); backdrop-filter: blur(8px); padding: 12px; z-index: 100; border-bottom: 1px solid #222; display: flex; gap: 8px; align-items: center; justify-content: space-between; }
+    select, input[type="text"] { background: #222; color: #fff; border: 1px solid #333; padding: 8px 12px; border-radius: 20px; font-size: 13px; outline: none; }
+    select { flex-shrink: 0; }
+    .search-box { flex-grow: 1; max-width: 180px; }
+
+    /* Pinterest風 2列グリッド */
+    .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 10px; }
+    .card { background: #1e1e1e; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; border: 1px solid #2a2a2a; }
+    .card-img-wrapper { width: 100%; background: #181818; position: relative; min-height: 150px; display: flex; align-items: center; justify-content: center; }
+    .card img { width: 100%; height: auto; display: block; object-fit: contain; }
+    .card-info { padding: 10px; display: flex; flex-direction: column; gap: 4px; }
+    .char-name { font-size: 14px; font-weight: bold; line-height: 1.2; color: #fff; }
+    .title-name { font-size: 11px; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    
+    /* 数値バッジ */
+    .stats { display: flex; gap: 6px; margin-top: 6px; font-size: 10px; align-items: center; flex-wrap: wrap; }
+    .badge-r18 { background: rgba(230, 0, 35, 0.2); color: #ff4d6d; border: 1px solid rgba(230, 0, 35, 0.4); padding: 2px 6px; border-radius: 4px; font-weight: bold; }
+    .badge-count { color: #aaa; }
+
+    /* エラー表示 */
+    #error-msg { text-align: center; color: #ff4d6d; padding: 20px; font-size: 13px; display: none; }
+  </style>
+</head>
+<body>
+
+  <!-- 1. パスワード画面 -->
+  <div id-="lock-screen">
+    <h2>🔒 パスワードを入力</h2>
+    <input type="password" id="pass-input" placeholder="Password">
+    <button onclick="checkPass()">開く</button>
+  </div>
+
+  <!-- 2. ギャラリーヘッダー -->
+  <header>
+    <select id="sort-select" onchange="renderCards()">
+      <option value="r18-desc">R-18率が高い順</option>
+      <option value="r18-asc">R-18率が低い順</option>
+      <option value="total-desc">総投稿数が多い順</option>
+    </select>
+    <input type="text" id="search-input" class="search-box" placeholder="キャラ/作品検索..." oninput="renderCards()">
+  </header>
+
+  <!-- 3. メインギャラリー表示部 -->
+  <div id="error-msg"></div>
+  <div class="grid" id="gallery-grid"></div>
+
+  <script>
+    // ==========================================
+    // ⚙️ 設定エリア（ここを変更してください）
+    // ==========================================
+    const PASSWORD = "0000"; // ★希望のパスワードに変更してください
+    
+    // ★Googleスプレッドシートの「Webに公開」で発行したCSVのURLを貼り付けてください
+    const SPREADSHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vXXXXX/pub?output=csv"; 
+
+    // ==========================================
+    // システム処理ロジック
+    // ==========================================
+    let characterData = [];
+
+    // パスワードチェック
+    function checkPass() {
+      const input = document.getElementById("pass-input").value;
+      if (input === PASSWORD) {
+        document.getElementById("lock-screen").style.display = "none";
+        localStorage.setItem("gallery_auth", "true");
+        loadData();
+      } else {
+        alert("パスワードが違います");
+      }
+    }
+
+    // 自動ログイン（パスワード保持）
+    window.onload = () => {
+      if (localStorage.getItem("gallery_auth") === "true") {
+        document.getElementById("lock-screen").style.display = "none";
+        loadData();
+      }
+    };
+
+    // CSVデータを取得して解析
+    async function loadData() {
+      try {
+        const response = await fetch(SPREADSHEET_CSV_URL);
+        if (!response.ok) throw new Error("データの取得に失敗しました");
+        const csvText = await response.text();
+        
+        characterData = parseCSV(csvText);
+        renderCards();
+      } catch (err) {
+        const errDiv = document.getElementById("error-msg");
+        errDiv.style.display = "block";
+        errDiv.innerText = "スプレッドシートの読み込みエラー: URLを確認してください。";
+      }
+    }
+
+    // 簡易CSVパース関数
+    function parseCSV(text) {
+      const lines = text.trim().split("\n");
+      const result = [];
+      // 1行目はヘッダーなので2行目から読み込み
+      for (let i = 1; i < lines.length; i++) {
+        const cols = lines[i].split(",").map(c => c.trim().replace(/^"|"$/g, ''));
+        if (cols.length >= 6) {
+          const total = parseFloat(cols[3]) || 0;
+          const r18 = parseFloat(cols[4]) || 0;
+          // F列に値がなければ自動計算
+          const rate = cols[5] ? parseFloat(cols[5]) : (total > 0 ? ((r18 / total) * 100).toFixed(1) : 0);
+
+          result.push({
+            title: cols[0],
+            name: cols[1],
+            imgUrl: cols[2],
+            total: total,
+            r18: r18,
+            rate: parseFloat(rate)
+          });
+        }
+      }
+      return result;
+    }
+
+    // カード描画処理
+    function renderCards() {
+      const grid = document.getElementById("gallery-grid");
+      const sortVal = document.getElementById("sort-select").value;
+      const searchVal = document.getElementById("search-input").value.toLowerCase();
+
+      grid.innerHTML = "";
+
+      // 検索フィルタリング
+      let filtered = characterData.filter(item => 
+        item.name.toLowerCase().includes(searchVal) || 
+        item.title.toLowerCase().includes(searchVal)
+      );
+
+      // ソート処理
+      filtered.sort((a, b) => {
+        if (sortVal === "r18-desc") return b.rate - a.rate;
+        if (sortVal === "r18-asc") return a.rate - b.rate;
+        if (sortVal === "total-desc") return b.total - a.total;
+      });
+
+      // HTML生成
+      filtered.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <div class="card-img-wrapper">
+            <img src="${item.imgUrl}" alt="${item.name}" loading="lazy" onerror="this.onerror=null;this.src='https://via.placeholder.com/200x300?text=No+Image';">
+          </div>
+          <div class="card-info">
+            <div class="char-name">${item.name}</div>
+            <div class="title-name">${item.title}</div>
+            <div class="stats">
+              <span class="badge-r18">R18: ${item.rate}%</span>
+              <span class="badge-count">全${item.total.toLocaleString()}件</span>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+  </script>
+</body>
+</html>
