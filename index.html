@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>R-18 Manga Research Gallery</title>
   <style>
+    /* サイト共通カラーパレット（変数） */
     :root {
       --bg-color: #0f172a;
       --card-bg: #1e293b;
@@ -21,51 +22,14 @@
       background-color: var(--bg-color);
       color: var(--text-color);
     }
-    /* #auth-screen {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      padding: 20px;
-      box-sizing: border-box;
+    #main-content {
+      padding: 15px;
     }
-    .auth-card {
-      background-color: var(--card-bg);
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
-      width: 100%;
-      max-width: 360px;
-      text-align: center;
-      border: 1px solid var(--border-color);
-    } */
-    .auth-card h2 { margin-top: 0; font-size: 1.25rem; }
-    .auth-input {
-      width: 100%;
-      padding: 12px;
-      margin: 15px 0;
-      border-radius: 8px;
-      border: 1px solid var(--border-color);
-      background-color: var(--bg-color);
-      color: #fff;
-      font-size: 1rem;
-      box-sizing: border-box;
-      text-align: center;
-    }
-    .auth-btn {
-      width: 100%;
-      padding: 12px;
-      border-radius: 8px;
-      border: none;
-      background-color: var(--accent-color);
-      color: white;
+    .header-title {
+      font-size: 1.2rem;
+      margin-bottom: 15px;
       font-weight: bold;
-      font-size: 1rem;
-      cursor: pointer;
     }
-    #main-content { display: none; padding: 15px; }
-    .header-title { font-size: 1.2rem; margin-bottom: 15px; font-weight: bold; }
     #debug-msg {
       background: #334155;
       color: #fbbf24;
@@ -99,21 +63,12 @@
     .card-title { font-size: 0.75rem; color: var(--text-sub); margin-bottom: 2px; }
     .card-name { font-size: 0.9rem; font-weight: bold; margin-bottom: 6px; }
     .card-meta { font-size: 0.75rem; color: var(--text-sub); display: flex; justify-content: space-between; margin-bottom: 4px; }
-    .card-sub-meta { font-size: 0.7rem; color: var(--text-sub); border-top: 1px solid var(--border-color); pt-4px; padding-top: 4px; margin-top: 4px; display: flex; justify-content: space-between; align-items: center; }
+    .card-sub-meta { font-size: 0.7rem; color: var(--text-sub); border-top: 1px solid var(--border-color); padding-top: 4px; margin-top: 4px; display: flex; justify-content: space-between; align-items: center; }
     .rate-badge { color: var(--accent-color); font-weight: bold; }
     .date-badge { background-color: var(--badge-bg); padding: 2px 6px; border-radius: 4px; font-size: 0.68rem; color: #cbd5e1; }
   </style>
 </head>
 <body>
-
-  <!-- パスワード画面 -->
-  <!-- <div id="auth-screen">
-    <div class="auth-card">
-      <h2>🔒 パスワードを入力</h2>
-      <input type="password" id="pass-input" class="auth-input" placeholder="Password">
-      <button onclick="checkAuth()" class="auth-btn">ログイン</button>
-    </div>
-  </div> -->
 
   <!-- ギャラリー本体画面 -->
   <div id="main-content">
@@ -123,19 +78,12 @@
   </div>
 
   <script>
-    // const PASSWORD = "7522"; // 設定したパスワード
-    const SPREADSHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSd_7yNBPFl0D0UXvSbCCeUvU_9MJ4OoboLxkbsUVCxEpKe1wl1S6rrVHE5jMmujdQBu9j8KgmMlbUo/pub?output=csv"; // ★CSV URLを入力
+    const SPREADSHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1v.../pub?output=csv"; // ★CSV URLを入力
 
-    // function checkAuth() {
-    //   const input = document.getElementById('pass-input').value;
-    //   if (input === PASSWORD) {
-    //     document.getElementById('auth-screen').style.display = 'none';
-    //     document.getElementById('main-content').style.display = 'block';
-    //     loadGalleryData();
-    //   } else {
-    //     alert('パスワードが正しくありません');
-    //   }
-    // }
+    // ページが開かれたら自動でデータ読み込みを実行
+    document.addEventListener("DOMContentLoaded", () => {
+      loadGalleryData();
+    });
 
     async function loadGalleryData() {
       const debugDiv = document.getElementById('debug-msg');
@@ -159,13 +107,13 @@
 
         for (let i = 1; i < rows.length; i++) {
           const row = rows[i];
-          const title     = row[0] || '無題';
-          const name      = row[1] || '未設定';
-          const imgUrl    = row[2] || '';
-          const total     = row[3] || '0';
-          const r18       = row[4] || '0';
-          const r18Rate   = row[5] || '0%';
-          const releaseDate = row[6] || '時期不明'; // G列（発表時期）
+          const title       = row[0] || '無題';
+          const name        = row[1] || '未設定';
+          const imgUrl      = row[2] || '';
+          const total       = row[3] || '0';
+          const r18         = row[4] || '0';
+          const r18Rate     = row[5] || '0%';
+          const releaseDate = row[6] || '時期不明';
 
           const card = document.createElement('div');
           card.className = 'card';
