@@ -13,8 +13,6 @@
       --accent-color: #f43f5e;
       --border-color: #334155;
       --badge-bg: #334155;
-      --trend-badge: #ef4444;
-      --manual-badge: #3b82f6;
     }
     body {
       margin: 0;
@@ -34,35 +32,31 @@
     }
     .header-title { font-size: 1.1rem; font-weight: bold; color: #ffffff; }
     
-    /* ソートエリアのデザイン（白文字・くっきり表示） */
+    /* ソートエリアのデザイン */
     .sort-container {
       display: flex;
       align-items: center;
       gap: 6px;
       font-size: 0.85rem;
-      color: #ffffff; /* 白色の文字・アイコン */
+      color: #ffffff;
       font-weight: 500;
     }
     .sort-select {
-  background-color: #334155;
-  color: #ffffff; /* 選択肢テキストの文字色 */
-  border: 1px solid #475569;
-  padding: 6px 30px 6px 10px; /* 右側に矢印アイコン用の余白(30px)を確保 */
-  border-radius: 6px;
-  font-size: 0.85rem;
-  outline: none;
-  cursor: pointer;
-  
-  /* ★黒色の標準矢印アイコンを無効化 */
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-
-  /* ★白色の矢印アイコン（SVG）を背景に指定 */
-  background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="%23ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>');
-  background-repeat: no-repeat;
-  background-position: right 10px center; /* 右端から10pxの位置に配置 */
-}
+      background-color: #334155;
+      color: #ffffff;
+      border: 1px solid #475569;
+      padding: 6px 30px 6px 10px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      outline: none;
+      cursor: pointer;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="%23ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>');
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+    }
 
     #debug-msg {
       background: #334155;
@@ -118,21 +112,7 @@
       border-bottom: 1px dashed #334155;
     }
 
-    .type-badge {
-      position: absolute;
-      top: 6px;
-      left: 6px;
-      padding: 3px 8px;
-      border-radius: 4px;
-      font-size: 0.65rem;
-      font-weight: bold;
-      color: #ffffff;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.6);
-    }
-    .badge-trend { background-color: var(--trend-badge); }
-    .badge-manual { background-color: var(--manual-badge); }
-
-    /* すり抜け除去（NG追加）ボタン */
+    /* NG追加ボタン */
     .delete-btn {
       position: absolute;
       top: 6px;
@@ -153,7 +133,7 @@
     }
     .delete-btn:active { background: #ef4444; }
 
-    /* カード本文（テキスト隠れを全解消） */
+    /* カード本文 */
     .card-body { padding: 10px 12px; }
     .card-title { font-size: 0.75rem; color: #94a3b8; line-height: 1.2; margin-bottom: 2px; }
     .card-name { font-size: 0.95rem; font-weight: bold; color: #ffffff; margin: 2px 0 8px 0; line-height: 1.3; }
@@ -166,13 +146,13 @@
       border-radius: 4px;
       margin-bottom: 6px;
       display: flex;
-      flex-direction: column; /* 縦並び（改行）にする */
-      gap: 4px;               /* 1行目と2行目の間隔 */
+      flex-direction: column;
+      gap: 4px;
     }
     
     .meta-row {
       display: flex;
-      justify-content: space-between; /* ラベル（左）と数値（右）を揃える */
+      justify-content: space-between;
       align-items: center;
     }
     
@@ -216,8 +196,8 @@
   </div>
 
 <script>
-    const SPREADSHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSd_7yNBPFl0D0UXvSbCCeUvU_9MJ4OoboLxkbsUVCxEpKe1wl1S6rrVHE5jMmujdQBu9j8KgmMlbUo/pub?output=csv"; // ★CSV URLを入力
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyakYOhD4h7XZTu78_v_gWs4DN6wUMCXwo_G4u8DOZif8ZfB6NhEPWq-yLrOYAaZ1fm/exec"; // ★GASのWebアプリURLを入力
+    const SPREADSHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSd_7yNBPFl0D0UXvSbCCeUvU_9MJ4OoboLxkbsUVCxEpKe1wl1S6rrVHE5jMmujdQBu9j8KgmMlbUo/pub?output=csv";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyakYOhD4h7XZTu78_v_gWs4DN6wUMCXwo_G4u8DOZif8ZfB6NhEPWq-yLrOYAaZ1fm/exec";
 
     let allCharacterData = [];
 
@@ -246,11 +226,9 @@
         for (let i = 1; i < rows.length; i++) {
           const row = rows[i];
           
-          // ★カンマを削除してから数値変換（9,399 -> 9399）
           const totalNum   = parseInt((row[3] || "0").replace(/,/g, ''), 10);
           const r18Num     = parseInt((row[4] || "0").replace(/,/g, ''), 10);
           const rateNum    = parseFloat((row[5] || "0").replace('%', '').replace(/,/g, ''));
-          const typeStr    = row[7] || '手動';
           const updateDate = row[8] || '未入力';
 
           allCharacterData.push({
@@ -262,7 +240,6 @@
             r18RateRaw:  rateNum,
             r18RateStr:  row[5] || '0%',
             releaseDate: row[6] || '時期不明',
-            type:        typeStr,
             inputDate:   updateDate
           });
         }
@@ -304,12 +281,8 @@
           `<img src="${item.imgUrl}" alt="${item.name}" onerror="this.onerror=null; this.parentNode.innerHTML='<div class=\\'no-img-box\\'>NO IMAGE</div>';">` : 
           `<div class="no-img-box">NO IMAGE</div>`;
 
-        const isTrend = item.type.includes('トレンド');
-        const badgeHTML = `<span class="type-badge ${isTrend ? 'badge-trend' : 'badge-manual'}">${isTrend ? 'トレンド' : '手動'}</span>`;
-
         card.innerHTML = `
           <div class="card-img-wrapper">
-            ${badgeHTML}
             ${imageHTML}
           </div>
           <div class="card-body">
