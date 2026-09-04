@@ -129,30 +129,9 @@
       backdrop-filter: blur(4px);
       box-shadow: 0 1px 3px rgba(0,0,0,0.4);
     }
-    .dev-high { background: rgba(244, 63, 94, 0.9); color: #ffffff; }    /* 60以上: 赤（高需要・穴場） */
+    .dev-high { background: rgba(244, 63, 94, 0.9); color: #ffffff; }    /* 60以上: 赤 */
     .dev-mid  { background: rgba(245, 158, 11, 0.9); color: #ffffff; }   /* 50以上: オレンジ */
     .dev-low  { background: rgba(51, 65, 85, 0.85); color: #cbd5e1; }    /* 50未満: ダークグレー */
-
-    /* NG追加ボタン */
-    .delete-btn {
-      position: absolute;
-      top: 6px;
-      right: 6px;
-      background: rgba(15, 23, 42, 0.85);
-      border: 1px solid var(--border-color);
-      color: #ffffff;
-      border-radius: 50%;
-      width: 28px;
-      height: 28px;
-      font-size: 0.8rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      backdrop-filter: blur(4px);
-      z-index: 2;
-    }
-    .delete-btn:active { background: #ef4444; }
 
     /* カード本文 */
     .card-body { padding: 8px; }
@@ -191,6 +170,7 @@
         <span>並び替え:</span>
         <select id="sort-select" class="sort-select" onchange="sortAndRender()">
           <option value="deviation-desc">偏差値（高い順）</option>
+          <option value="title-asc">作品名（五十音順）</option>
           <option value="random">ランダム</option>
           <option value="total-desc">総投稿数（多い順）</option>
           <option value="views-desc">閲覧数（多い順）</option>
@@ -204,7 +184,6 @@
 
   <script>
     const SPREADSHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSd_7yNBPFl0D0UXvSbCCeUvU_9MJ4OoboLxkbsUVCxEpKe1wl1S6rrVHE5jMmujdQBu9j8KgmMlbUo/pub?output=csv";
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyakYOhD4h7XZTu78_v_gWs4DN6wUMCXwo_G4u8DOZif8ZfB6NhEPWq-yLrOYAaZ1fm/exec";
 
     let allCharacterData = [];
 
@@ -237,7 +216,7 @@
           const r18Num     = parseInt((row[4] || "0").replace(/,/g, ''), 10);
           const rateNum    = parseFloat((row[5] || "0").replace('%', '').replace(/,/g, ''));
           const viewsNum   = parseInt((row[8] || "0").replace(/,/g, ''), 10); // I列（index 8）
-          const devNum     = row[10] ? parseFloat(row[10].replace(/,/g, '')) : null; // K列（index 10）を取得
+          const devNum     = row[10] ? parseFloat(row[10].replace(/,/g, '')) : null; // K列（index 10）
           
           const updateDate = row[7] || '未入力';
 
@@ -274,6 +253,8 @@
 
       if (sortValue === 'deviation-desc') {
         sortedData.sort((a, b) => (b.deviation ?? -999) - (a.deviation ?? -999));
+      } else if (sortValue === 'title-asc') {
+        sortedData.sort((a, b) => a.title.localeCompare(b.title, 'ja'));
       } else if (sortValue === 'total-desc') {
         sortedData.sort((a, b) => b.total - a.total);
       } else if (sortValue === 'views-desc') {
@@ -313,7 +294,6 @@
           <div class="card-img-wrapper">
             ${devBadgeHTML}
             ${imageHTML}
-            <button class="delete-btn" onclick="addNG('${item.name}')" title="NGリストに追加">✕</button>
           </div>
           <div class="card-body">
             <div class="card-title" title="${item.title}">${item.title}</div>
@@ -337,24 +317,6 @@
         `;
         grid.appendChild(card);
       });
-    }
-
-    async function addNG(characterName) {
-      if (!confirm(`「${characterName}」をNGリストに追加してギャラリーから削除しますか？`)) return;
-
-      allCharacterData = allCharacterData.filter(item => item.name !== characterName);
-      sortAndRender();
-
-      try {
-        await fetch(GAS_API_URL, {
-          method: "POST",
-          mode: "no-cors",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name: characterName })
-        });
-      } catch (err) {
-        console.error("NG追加エラー:", err);
-      }
     }
   </script>
 </body>
