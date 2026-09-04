@@ -44,15 +44,25 @@
       font-weight: 500;
     }
     .sort-select {
-      background-color: #334155;
-      color: #ffffff; /* 白文字 */
-      border: 1px solid #475569;
-      padding: 6px 10px;
-      border-radius: 6px;
-      font-size: 0.85rem;
-      outline: none;
-      cursor: pointer;
-    }
+  background-color: #334155;
+  color: #ffffff; /* 選択肢テキストの文字色 */
+  border: 1px solid #475569;
+  padding: 6px 30px 6px 10px; /* 右側に矢印アイコン用の余白(30px)を確保 */
+  border-radius: 6px;
+  font-size: 0.85rem;
+  outline: none;
+  cursor: pointer;
+  
+  /* ★黒色の標準矢印アイコンを無効化 */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  /* ★白色の矢印アイコン（SVG）を背景に指定 */
+  background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="%23ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>');
+  background-repeat: no-repeat;
+  background-position: right 10px center; /* 右端から10pxの位置に配置 */
+}
 
     #debug-msg {
       background: #334155;
