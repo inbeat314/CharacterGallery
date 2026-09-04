@@ -67,7 +67,7 @@
       margin-bottom: 15px;
     }
 
-    /* 均一かつコンパクトな2列グリッド（キモい隙間を完全カット） */
+    /* 2列〜4列のグリッド配置 */
     .gallery-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -94,7 +94,7 @@
     .card-img-wrapper {
       position: relative;
       width: 100%;
-      aspect-ratio: 3 / 4; /* 画像の高さを均一化して縦幅の崩れを防止 */
+      aspect-ratio: 3 / 4;
       background-color: #0f172a;
       overflow: hidden;
     }
@@ -137,11 +137,12 @@
     }
     .delete-btn:active { background: #ef4444; }
 
-    /* カード本文（コンパクト化） */
+    /* カード本文（表示項目削減に伴い微調整） */
     .card-body { padding: 8px; }
     .card-title { font-size: 0.7rem; color: #94a3b8; line-height: 1.2; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .card-name { font-size: 0.85rem; font-weight: bold; color: #ffffff; margin: 2px 0 6px 0; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .card-name { font-size: 0.85rem; font-weight: bold; color: #ffffff; margin: 2px 0 0 0; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     
+    /* 再実装時に使うスタイル定義（そのまま保持） */
     .card-meta { 
       font-size: 0.7rem; 
       color: var(--text-sub); 
@@ -299,6 +300,8 @@
           <div class="card-body">
             <div class="card-title" title="${item.title}">${item.title}</div>
             <div class="card-name" title="${item.name}">${item.name}</div>
+            
+            <!-- 再実装時用コメントアウトエリア
             <div class="card-meta">
               <div class="meta-row">
                 <span>投稿数:</span>
@@ -319,6 +322,7 @@
                 <span>${item.inputDate}</span>
               </div>
             </div>
+            -->
           </div>
         `;
         grid.appendChild(card);
