@@ -12,6 +12,7 @@
       --text-sub: #94a3b8;
       --accent-color: #ec4899;
       --border-color: #334155;
+      --badge-bg: #334155;
     }
     body {
       margin: 0;
@@ -97,8 +98,10 @@
     .card-body { padding: 10px; }
     .card-title { font-size: 0.75rem; color: var(--text-sub); margin-bottom: 2px; }
     .card-name { font-size: 0.9rem; font-weight: bold; margin-bottom: 6px; }
-    .card-meta { font-size: 0.75rem; color: var(--text-sub); display: flex; justify-content: space-between; }
+    .card-meta { font-size: 0.75rem; color: var(--text-sub); display: flex; justify-content: space-between; margin-bottom: 4px; }
+    .card-sub-meta { font-size: 0.7rem; color: var(--text-sub); border-top: 1px solid var(--border-color); pt-4px; padding-top: 4px; margin-top: 4px; display: flex; justify-content: space-between; align-items: center; }
     .rate-badge { color: var(--accent-color); font-weight: bold; }
+    .date-badge { background-color: var(--badge-bg); padding: 2px 6px; border-radius: 4px; font-size: 0.68rem; color: #cbd5e1; }
   </style>
 </head>
 <body>
@@ -120,9 +123,8 @@
   </div>
 
   <script>
-    // 設定項目
-    const PASSWORD = "7522"; // ★希望のパスワードを設定してください
-    const SPREADSHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSd_7yNBPFl0D0UXvSbCCeUvU_9MJ4OoboLxkbsUVCxEpKe1wl1S6rrVHE5jMmujdQBu9j8KgmMlbUo/pub?output=csv"; // ★CSV URLをここに貼る
+    const PASSWORD = "7522"; // 設定したパスワード
+    const SPREADSHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSd_7yNBPFl0D0UXvSbCCeUvU_9MJ4OoboLxkbsUVCxEpKe1wl1S6rrVHE5jMmujdQBu9j8KgmMlbUo/pub?output=csv"; // ★CSV URLを入力
 
     function checkAuth() {
       const input = document.getElementById('pass-input').value;
@@ -138,40 +140,32 @@
     async function loadGalleryData() {
       const debugDiv = document.getElementById('debug-msg');
       try {
-        debugDiv.innerText = "CSVデータを取得中...\n" + SPREADSHEET_CSV_URL;
-        
         const response = await fetch(SPREADSHEET_CSV_URL);
-        if (!response.ok) {
-          throw new Error(`HTTPエラー! ステータス: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`HTTPエラー! ステータス: ${response.status}`);
         
         const csvText = await response.text();
-        debugDiv.innerText = "データ取得成功！解析中...\n文字数: " + csvText.length;
 
-        // 簡易CSVパース（改行コード対応）
         const rows = csvText.split(/\r?\n/).map(row => {
-          // ダブルクォーテーション対応のカンマ分割
           return row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(cell => cell.replace(/^"|"$/g, '').trim());
         }).filter(row => row.length > 1 && row.some(cell => cell !== ""));
 
         if (rows.length <= 1) {
-          debugDiv.innerText = "⚠️ データが見つかりません。スプレッドシートの2行目以降にデータが入っているか確認してください。\n取得結果:\n" + csvText.substring(0, 100);
+          debugDiv.innerText = "⚠️ データが見つかりません。スプレッドシートの2行目以降にデータが入っているか確認してください。";
           return;
         }
 
         const grid = document.getElementById('gallery-grid');
         grid.innerHTML = '';
-        let count = 0;
 
-        // 2行目（データ行）からループ処理
         for (let i = 1; i < rows.length; i++) {
           const row = rows[i];
-          const title   = row[0] || '無題';
-          const name    = row[1] || '未設定';
-          const imgUrl  = row[2] || '';
-          const total   = row[3] || '0';
-          const r18     = row[4] || '0';
-          const r18Rate = row[5] || '0%';
+          const title     = row[0] || '無題';
+          const name      = row[1] || '未設定';
+          const imgUrl    = row[2] || '';
+          const total     = row[3] || '0';
+          const r18       = row[4] || '0';
+          const r18Rate   = row[5] || '0%';
+          const releaseDate = row[6] || '時期不明'; // G列（発表時期）
 
           const card = document.createElement('div');
           card.className = 'card';
@@ -184,16 +178,19 @@
                 <span>R18: ${r18}/${total}</span>
                 <span class="rate-badge">${r18Rate}</span>
               </div>
+              <div class="card-sub-meta">
+                <span>登場時期</span>
+                <span class="date-badge">${releaseDate}</span>
+              </div>
             </div>
           `;
           grid.appendChild(card);
-          count++;
         }
 
-        debugDiv.style.display = 'none'; // 正常終了したらデバッグ表示を隠す
+        debugDiv.style.display = 'none';
       } catch (err) {
         debugDiv.style.color = '#ef4444';
-        debugDiv.innerText = "❌ エラーが発生しました:\n" + err.message + "\n\nCSVのURLが正しいか、または『ウェブに公開』が有効か確認してください。";
+        debugDiv.innerText = "❌ エラーが発生しました:\n" + err.message;
       }
     }
   </script>
