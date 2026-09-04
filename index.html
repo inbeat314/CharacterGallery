@@ -3,58 +3,57 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>R-18 Manga Research Gallery</title>
+  <title>Char-Research Gallery</title>
   <style>
-    /* サイト共通カラーパレット（変数） */
     :root {
       --bg-color: #0f172a;
       --card-bg: #1e293b;
-      --text-color: #f8fafc;
-      --text-sub: #94a3b8;
-      --accent-color: #ec4899;
+      --text-color: #ffffff;
+      --text-sub: #cbd5e1;
+      --accent-color: #f43f5e;
       --border-color: #334155;
       --badge-bg: #334155;
+      --trend-badge: #ef4444;
+      --manual-badge: #3b82f6;
     }
     body {
       margin: 0;
       padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background-color: var(--bg-color);
       color: var(--text-color);
     }
-    #main-content {
-      padding: 15px;
-    }
+    #main-content { padding: 12px; }
     .header-area {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 15px;
+      margin-bottom: 16px;
       flex-wrap: wrap;
       gap: 10px;
     }
-    .header-title {
-      font-size: 1.2rem;
-      font-weight: bold;
-    }
-    /* ソート用ドロップダウンのスタイル */
+    .header-title { font-size: 1.1rem; font-weight: bold; color: #ffffff; }
+    
+    /* ソートエリアのデザイン（白文字・くっきり表示） */
     .sort-container {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       font-size: 0.85rem;
-      color: var(--text-sub);
+      color: #ffffff; /* 白色の文字・アイコン */
+      font-weight: 500;
     }
     .sort-select {
-      background-color: var(--card-bg);
-      color: var(--text-color);
-      border: 1px solid var(--border-color);
-      padding: 6px 12px;
+      background-color: #334155;
+      color: #ffffff; /* 白文字 */
+      border: 1px solid #475569;
+      padding: 6px 10px;
       border-radius: 6px;
       font-size: 0.85rem;
       outline: none;
       cursor: pointer;
     }
+
     #debug-msg {
       background: #334155;
       color: #fbbf24;
@@ -62,47 +61,127 @@
       border-radius: 8px;
       font-size: 0.85rem;
       margin-bottom: 15px;
-      white-space: pre-wrap;
-      word-break: break-all;
     }
-    .gallery-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 12px;
+
+    /* Masonryグリッド */
+    .pinterest-grid {
+      column-count: 2;
+      column-gap: 12px;
     }
+    @media (min-width: 600px) { .pinterest-grid { column-count: 3; } }
+    @media (min-width: 900px) { .pinterest-grid { column-count: 4; } }
+
     .card {
       background-color: var(--card-bg);
-      border-radius: 8px;
+      border-radius: 12px;
       overflow: hidden;
       border: 1px solid var(--border-color);
+      margin-bottom: 12px;
+      break-inside: avoid;
       display: flex;
       flex-direction: column;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+      position: relative;
+    }
+    
+    .card-img-wrapper {
+      position: relative;
+      width: 100%;
+      background-color: #0f172a;
     }
     .card img {
       width: 100%;
-      height: 180px;
+      display: block;
       object-fit: cover;
-      background-color: #000;
+      min-height: 120px;
     }
-    .card-body { padding: 10px; }
-    .card-title { font-size: 0.75rem; color: var(--text-sub); margin-bottom: 2px; }
-    .card-name { font-size: 0.9rem; font-weight: bold; margin-bottom: 6px; }
-    .card-meta { font-size: 0.75rem; color: var(--text-sub); display: flex; justify-content: space-between; margin-bottom: 4px; }
-    .card-sub-meta { font-size: 0.7rem; color: var(--text-sub); border-top: 1px solid var(--border-color); padding-top: 4px; margin-top: 4px; display: flex; justify-content: space-between; align-items: center; }
+    .no-img-box {
+      width: 100%;
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #1e293b;
+      color: #64748b;
+      font-size: 0.75rem;
+      font-weight: bold;
+      border-bottom: 1px dashed #334155;
+    }
+
+    .type-badge {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 0.65rem;
+      font-weight: bold;
+      color: #ffffff;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.6);
+    }
+    .badge-trend { background-color: var(--trend-badge); }
+    .badge-manual { background-color: var(--manual-badge); }
+
+    /* すり抜け除去（NG追加）ボタン */
+    .delete-btn {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid var(--border-color);
+      color: #ffffff;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      backdrop-filter: blur(4px);
+      z-index: 2;
+    }
+    .delete-btn:active { background: #ef4444; }
+
+    /* カード本文（テキスト隠れを全解消） */
+    .card-body { padding: 10px 12px; }
+    .card-title { font-size: 0.75rem; color: #94a3b8; line-height: 1.2; margin-bottom: 2px; }
+    .card-name { font-size: 0.95rem; font-weight: bold; color: #ffffff; margin: 2px 0 8px 0; line-height: 1.3; }
+    
+    .card-meta { 
+      font-size: 0.75rem; 
+      color: var(--text-sub); 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center;
+      background: rgba(15, 23, 42, 0.5);
+      padding: 4px 6px;
+      border-radius: 4px;
+      margin-bottom: 6px;
+    }
     .rate-badge { color: var(--accent-color); font-weight: bold; }
-    .date-badge { background-color: var(--badge-bg); padding: 2px 6px; border-radius: 4px; font-size: 0.68rem; color: #cbd5e1; }
+    
+    .card-sub-meta { 
+      font-size: 0.7rem; 
+      color: #94a3b8; 
+      border-top: 1px solid var(--border-color); 
+      padding-top: 6px; 
+      display: flex; 
+      flex-direction: column;
+      gap: 2px;
+    }
+    .sub-meta-row { display: flex; justify-content: space-between; align-items: center; }
+    .date-badge { background-color: var(--badge-bg); padding: 1px 5px; border-radius: 3px; color: #f1f5f9; font-weight: 500; }
   </style>
 </head>
 <body>
 
-  <!-- ギャラリー本体画面 -->
   <div id="main-content">
     <div class="header-area">
-      <div class="header-title">キャラ研究ギャラリー</div>
+      <div class="header-title">Char-Research Gallery</div>
       
-      <!-- ソート用UI -->
       <div class="sort-container">
-        <label for="sort-select">並び替え:</label>
+        <span>⇅ 並び順:</span>
         <select id="sort-select" class="sort-select" onchange="sortAndRender()">
           <option value="date-desc">登場時期（新しい順）</option>
           <option value="date-asc">登場時期（古い順）</option>
@@ -113,13 +192,13 @@
     </div>
 
     <div id="debug-msg">データを読み込み中...</div>
-    <div id="gallery-grid" class="gallery-grid"></div>
+    <div id="gallery-grid" class="pinterest-grid"></div>
   </div>
 
   <script>
     const SPREADSHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSd_7yNBPFl0D0UXvSbCCeUvU_9MJ4OoboLxkbsUVCxEpKe1wl1S6rrVHE5jMmujdQBu9j8KgmMlbUo/pub?output=csv"; // ★CSV URLを入力
+    const GAS_API_URL = "YOUR_GAS_WEB_APP_URL"; // ★GASのWebアプリURLを入力
 
-    // 読み込んだ全カードデータを保持する配列
     let allCharacterData = [];
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -139,35 +218,35 @@
         }).filter(row => row.length > 1 && row.some(cell => cell !== ""));
 
         if (rows.length <= 1) {
-          debugDiv.innerText = "⚠️ データが見つかりません。スプレッドシートの2行目以降にデータが入っているか確認してください。";
+          debugDiv.innerText = "⚠️ データが見つかりません。スプレッドシートを確認してください。";
           return;
         }
 
-        // CSVの各行をオブジェクト形式に変換して保管
         allCharacterData = [];
         for (let i = 1; i < rows.length; i++) {
           const row = rows[i];
           
-          // %記号やカンマを除去して数値計算できるように加工
           const totalNum = parseInt(row[3] || "0", 10);
           const r18Num   = parseInt(row[4] || "0", 10);
           const rateNum  = parseFloat((row[5] || "0").replace('%', ''));
+          const typeStr  = row[7] || '手動';
+          const updateDate = row[8] || '未入力'; // I列: 手動入力日
 
           allCharacterData.push({
-            title:       row[0] || '無題',
+            title:       row[0] || '作品名未設定',
             name:        row[1] || '未設定',
             imgUrl:      row[2] || '',
             total:       totalNum,
             r18:         r18Num,
             r18RateRaw:  rateNum,
             r18RateStr:  row[5] || '0%',
-            releaseDate: row[6] || '時期不明'
+            releaseDate: row[6] || '時期不明',
+            type:        typeStr,
+            inputDate:   updateDate
           });
         }
 
-        // 初回描画
         sortAndRender();
-
         debugDiv.style.display = 'none';
       } catch (err) {
         debugDiv.style.color = '#ef4444';
@@ -175,52 +254,81 @@
       }
     }
 
-   // 並び替え＆画面描画の処理
-function sortAndRender() {
-  const sortValue = document.getElementById('sort-select').value;
-  
-  // 元データを壊さないようにコピーを作成してソート
-  let sortedData = [...allCharacterData];
+    function sortAndRender() {
+      const sortValue = document.getElementById('sort-select').value;
+      let sortedData = [...allCharacterData];
 
-  if (sortValue === 'date-asc') {
-    // 登場時期（古い順）
-    sortedData.sort((a, b) => a.releaseDate.localeCompare(b.releaseDate));
-  } else if (sortValue === 'rate-desc') {
-    // R-18率（高い順）
-    sortedData.sort((a, b) => b.r18RateRaw - a.r18RateRaw);
-  } else if (sortValue === 'total-desc') {
-    // 総投稿数（多い順）
-    sortedData.sort((a, b) => b.total - a.total);
-  } else {
-    // デフォルト：登場時期（新しい順 / date-desc）
-    sortedData.sort((a, b) => b.releaseDate.localeCompare(a.releaseDate));
-  }
+      if (sortValue === 'date-asc') {
+        sortedData.sort((a, b) => a.releaseDate.localeCompare(b.releaseDate));
+      } else if (sortValue === 'rate-desc') {
+        sortedData.sort((a, b) => b.r18RateRaw - a.r18RateRaw);
+      } else if (sortValue === 'total-desc') {
+        sortedData.sort((a, b) => b.total - a.total);
+      } else {
+        sortedData.sort((a, b) => b.releaseDate.localeCompare(a.releaseDate));
+      }
 
-  // カード描画
-  const grid = document.getElementById('gallery-grid');
-  grid.innerHTML = '';
+      const grid = document.getElementById('gallery-grid');
+      grid.innerHTML = '';
 
-  sortedData.forEach(item => {
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.innerHTML = `
-      <img src="${item.imgUrl}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/150?text=No+Image';">
-      <div class="card-body">
-        <div class="card-title">${item.title}</div>
-        <div class="card-name">${item.name}</div>
-        <div class="card-meta">
-          <span>R18: ${item.r18}/${item.total}</span>
-          <span class="rate-badge">${item.r18RateStr}</span>
-        </div>
-        <div class="card-sub-meta">
-          <span>登場時期</span>
-          <span class="date-badge">${item.releaseDate}</span>
-        </div>
-      </div>
-    `;
-    grid.appendChild(card);
-  });
-}
+      sortedData.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        
+        const imageHTML = item.imgUrl ? 
+          `<img src="${item.imgUrl}" alt="${item.name}" onerror="this.onerror=null; this.parentNode.innerHTML='<div class=\\'no-img-box\\'>NO IMAGE</div>';">` : 
+          `<div class="no-img-box">NO IMAGE</div>`;
+
+        const isTrend = item.type.includes('トレンド');
+        const badgeHTML = `<span class="type-badge ${isTrend ? 'badge-trend' : 'badge-manual'}">${isTrend ? '🔥 トレンド' : '📌 追跡'}</span>`;
+
+        card.innerHTML = `
+          <div class="card-img-wrapper">
+            ${badgeHTML}
+            <button class="delete-btn" onclick="addNG('${item.name}')" title="NGリストに追加して除去">✕</button>
+            ${imageHTML}
+          </div>
+          <div class="card-body">
+            <div class="card-title">${item.title}</div>
+            <div class="card-name">${item.name}</div>
+            <div class="card-meta">
+              <span>投稿数: ${item.r18}/${item.total}</span>
+              <span class="rate-badge">${item.r18RateStr}</span>
+            </div>
+            <div class="card-sub-meta">
+              <div class="sub-meta-row">
+                <span>登場時期</span>
+                <span class="date-badge">${item.releaseDate}</span>
+              </div>
+              <div class="sub-meta-row">
+                <span>数値確認日</span>
+                <span>${item.inputDate}</span>
+              </div>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    // すり抜けタグの除去機能（NG追加）
+    async function addNG(characterName) {
+      if (!confirm(`「${characterName}」をNGリストに追加してギャラリーから削除しますか？`)) return;
+
+      allCharacterData = allCharacterData.filter(item => item.name !== characterName);
+      sortAndRender();
+
+      try {
+        await fetch(GAS_API_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: characterName })
+        });
+      } catch (err) {
+        console.error("NG追加エラー:", err);
+      }
+    }
   </script>
 </body>
 </html>
