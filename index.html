@@ -116,6 +116,23 @@
       font-weight: bold;
     }
 
+    /* 偏差値バッジ */
+    .dev-badge {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: bold;
+      z-index: 2;
+      backdrop-filter: blur(4px);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+    }
+    .dev-high { background: rgba(244, 63, 94, 0.9); color: #ffffff; }    /* 60以上: 赤（高需要・穴場） */
+    .dev-mid  { background: rgba(245, 158, 11, 0.9); color: #ffffff; }   /* 50以上: オレンジ */
+    .dev-low  { background: rgba(51, 65, 85, 0.85); color: #cbd5e1; }    /* 50未満: ダークグレー */
+
     /* NG追加ボタン */
     .delete-btn {
       position: absolute;
@@ -158,6 +175,10 @@
       justify-content: space-between;
       align-items: center;
     }
+    .meta-highlight {
+      color: #f43f5e;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -169,6 +190,7 @@
       <div class="sort-container">
         <span>並び替え:</span>
         <select id="sort-select" class="sort-select" onchange="sortAndRender()">
+          <option value="deviation-desc">偏差値（高い順）</option>
           <option value="random">ランダム</option>
           <option value="total-desc">総投稿数（多い順）</option>
           <option value="views-desc">閲覧数（多い順）</option>
@@ -214,7 +236,8 @@
           const totalNum   = parseInt((row[3] || "0").replace(/,/g, ''), 10);
           const r18Num     = parseInt((row[4] || "0").replace(/,/g, ''), 10);
           const rateNum    = parseFloat((row[5] || "0").replace('%', '').replace(/,/g, ''));
-          const viewsNum   = parseInt((row[8] || "0").replace(/,/g, ''), 10); // I列（index 8）を取得
+          const viewsNum   = parseInt((row[8] || "0").replace(/,/g, ''), 10); // I列（index 8）
+          const devNum     = row[10] ? parseFloat(row[10].replace(/,/g, '')) : null; // K列（index 10）を取得
           
           const updateDate = row[7] || '未入力';
 
@@ -228,7 +251,8 @@
             r18RateStr:  row[5] || '0%',
             releaseDate: row[6] || '時期不明',
             inputDate:   updateDate,
-            views:       viewsNum
+            views:       viewsNum,
+            deviation:   isNaN(devNum) ? null : devNum
           });
         }
 
@@ -248,7 +272,9 @@
       const sortValue = document.getElementById('sort-select').value;
       let sortedData = [...allCharacterData];
 
-      if (sortValue === 'total-desc') {
+      if (sortValue === 'deviation-desc') {
+        sortedData.sort((a, b) => (b.deviation ?? -999) - (a.deviation ?? -999));
+      } else if (sortValue === 'total-desc') {
         sortedData.sort((a, b) => b.total - a.total);
       } else if (sortValue === 'views-desc') {
         sortedData.sort((a, b) => b.views - a.views);
@@ -271,9 +297,23 @@
           `<img src="${item.imgUrl}" alt="${item.name}" onerror="this.onerror=null; this.parentNode.innerHTML='<div class=\\'no-img-box\\'>NO IMAGE</div>';">` : 
           `<div class="no-img-box">NO IMAGE</div>`;
 
+        // 偏差値バッジの処理
+        let devBadgeHTML = '';
+        if (item.deviation !== null) {
+          let devClass = 'dev-low';
+          if (item.deviation >= 60) {
+            devClass = 'dev-high';
+          } else if (item.deviation >= 50) {
+            devClass = 'dev-mid';
+          }
+          devBadgeHTML = `<div class="dev-badge ${devClass}">SS ${item.deviation.toFixed(1)}</div>`;
+        }
+
         card.innerHTML = `
           <div class="card-img-wrapper">
+            ${devBadgeHTML}
             ${imageHTML}
+            <button class="delete-btn" onclick="addNG('${item.name}')" title="NGリストに追加">✕</button>
           </div>
           <div class="card-body">
             <div class="card-title" title="${item.title}">${item.title}</div>
@@ -287,6 +327,10 @@
               <div class="meta-row">
                 <span>閲覧数:</span>
                 <span>${item.views.toLocaleString()}</span>
+              </div>
+              <div class="meta-row">
+                <span>需要偏差値:</span>
+                <span class="meta-highlight">${item.deviation !== null ? item.deviation.toFixed(1) : '-'}</span>
               </div>
             </div>
           </div>
