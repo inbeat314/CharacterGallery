@@ -117,6 +117,19 @@
       position: relative;
     }
 
+    .card.is-pickup {
+  border-left: 4px solid #e11d48;
+}
+
+.card.is-reference {
+  border-left: 4px solid #2563eb;
+}
+
+.card.is-pickup.is-reference {
+  border-left: 4px solid #e11d48;
+  box-shadow: inset 4px 0 0 #2563eb;
+}
+    
     .card-img-wrapper {
       position: relative;
       width: 100%;
@@ -494,23 +507,23 @@
       `;
     }
 
-    function getBannerHTML(item) {
-      let html = '';
+   function getBannerHTML(item) {
+  let html = '';
 
-      // T列：潜在需要差が5以上
-      if (item.demandGap !== null && item.demandGap >= 5) {
-        html += '<span class="banner pickup-banner">ピックアップ</span>';
-      }
+  // T列：潜在需要差が5以上
+  if (item.demandGap !== null && item.demandGap >= 5) {
+    html += '<span class="banner pickup-banner">ピックアップ</span>';
+  }
 
-      // I列：01_1年以内
-      if (item.category === '01_1年以内') {
-        html += '<span class="banner reference-banner">参考</span>';
-      }
+  // I列：01_1年以内
+  if (item.category === '01_1年以内') {
+    html += '<span class="banner reference-banner">参考</span>';
+  }
 
-      return html
-        ? `<div class="banner-container">${html}</div>`
-        : '';
-    }
+  return html
+    ? `<div class="banner-container">${html}</div>`
+    : '';
+}
 
     function getMetaRow(label, actual) {
       return `
@@ -591,8 +604,16 @@
       grid.innerHTML = '';
 
       sortedData.forEach(item => {
-        const card = document.createElement('div');
-        card.className = 'card';
+       const card = document.createElement('div');
+card.className = 'card';
+
+if (item.demandGap !== null && item.demandGap >= 5) {
+  card.classList.add('is-pickup');
+}
+
+if (item.category === '01_1年以内') {
+  card.classList.add('is-reference');
+}
 
         const safeTitle = escapeHTML(item.title);
         const safeName = escapeHTML(item.name);
@@ -602,12 +623,12 @@
           : `<div class="no-img-box">NO IMAGE</div>`;
 
         const devBadgeHTML = getDeviationBadge(item);
-        const bannerHTML = getBannerHTML(item);
+    
 
         card.innerHTML = `
           <div class="card-img-wrapper">
             ${devBadgeHTML}
-            ${bannerHTML}
+          
             ${imageHTML}
           </div>
 
