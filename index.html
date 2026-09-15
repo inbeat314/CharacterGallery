@@ -312,33 +312,39 @@
       loadGalleryData();
     });
 
-    function parseNumber(value) {
-      if (value === undefined || value === null || value === "") {
-        return null;
-      }
+  function parseNumber(value) {
+  if (value === undefined || value === null || value === '') {
+    return null;
+  }
 
-      const num = parseFloat(
-        String(value)
-          .replace(/,/g, '')
-          .replace(/%/g, '')
-          .replace(/％/g, '')
-          .trim()
-      );
+  const normalized = String(value)
+    .replace(/,/g, '')
+    .replace(/%/g, '')
+    .replace(/％/g, '')
+    .trim();
 
-      return isNaN(num) ? null : num;
-    }
+  const num = Number(normalized);
 
-    function formatNumber(value) {
-      return value === null || value === undefined
-        ? '-'
-        : value.toLocaleString('ja-JP');
-    }
+  return Number.isFinite(num) ? num : null;
+}
 
-    function formatDeviation(value) {
-      return value === null || value === undefined
-        ? '-'
-        : value.toFixed(1);
-    }
+   function formatNumber(value) {
+  if (value === null || value === undefined || isNaN(value)) {
+    return '-';
+  }
+
+  return Number(value).toLocaleString('ja-JP', {
+    maximumFractionDigits: 1
+  });
+}
+
+   function formatDeviation(value) {
+  if (value === null || value === undefined || isNaN(value)) {
+    return '-';
+  }
+
+  return Number(value).toFixed(1);
+}
 
     
 
@@ -489,16 +495,18 @@
       return html ? `<div class="banner-container">${html}</div>` : '';
     }
 
-   function getGapHTML(actual, expected) {
+  function getGapHTML(actual, expected) {
   if (
     actual === null ||
     expected === null ||
+    isNaN(actual) ||
+    isNaN(expected) ||
     expected === 0
   ) {
     return '-';
   }
 
-  const gapPercent = ((actual - expected) / expected) * 100;
+  const gapPercent = ((Number(actual) - Number(expected)) / Number(expected)) * 100;
   const sign = gapPercent > 0 ? '+' : '';
 
   return `${sign}${gapPercent.toFixed(1)}%`;
