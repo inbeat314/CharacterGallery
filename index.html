@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -14,6 +15,7 @@
       --border-color: #334155;
       --badge-bg: #334155;
     }
+
     body {
       margin: 0;
       padding: 0;
@@ -21,7 +23,11 @@
       background-color: var(--bg-color);
       color: var(--text-color);
     }
-    #main-content { padding: 12px; }
+
+    #main-content {
+      padding: 12px;
+    }
+
     .header-area {
       display: flex;
       justify-content: space-between;
@@ -30,9 +36,13 @@
       flex-wrap: wrap;
       gap: 10px;
     }
-    .header-title { font-size: 1.1rem; font-weight: bold; color: #ffffff; }
-    
-    /* ソートエリア */
+
+    .header-title {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #ffffff;
+    }
+
     .sort-container {
       display: flex;
       align-items: center;
@@ -40,7 +50,9 @@
       font-size: 0.85rem;
       color: #ffffff;
       font-weight: 500;
+      flex-wrap: wrap;
     }
+
     .sort-select {
       background-color: #334155;
       color: #ffffff;
@@ -58,6 +70,21 @@
       background-position: right 10px center;
     }
 
+    .random-reset-btn {
+      background: #475569;
+      color: #ffffff;
+      border: 1px solid #64748b;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      display: none;
+    }
+
+    .random-reset-btn:hover {
+      background: #64748b;
+    }
+
     #debug-msg {
       background: #334155;
       color: #fbbf24;
@@ -67,12 +94,12 @@
       margin-bottom: 15px;
     }
 
-    /* 2列〜4列のグリッド配置 */
     .gallery-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 8px;
     }
+
     @media (min-width: 768px) {
       .gallery-grid {
         grid-template-columns: repeat(4, 1fr);
@@ -98,12 +125,14 @@
       background-color: #0f172a;
       overflow: hidden;
     }
+
     .card img {
       width: 100%;
       height: 100%;
       display: block;
       object-fit: cover;
     }
+
     .no-img-box {
       width: 100%;
       height: 100%;
@@ -116,7 +145,6 @@
       font-weight: bold;
     }
 
-    /* 偏差値バッジ */
     .dev-badge {
       position: absolute;
       top: 6px;
@@ -127,36 +155,110 @@
       font-weight: bold;
       z-index: 2;
       backdrop-filter: blur(4px);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
     }
-    .dev-high { background: rgba(244, 63, 94, 0.9); color: #ffffff; }    /* 60以上: 赤 */
-    .dev-mid  { background: rgba(245, 158, 11, 0.9); color: #ffffff; }   /* 50以上: オレンジ */
-    .dev-low  { background: rgba(51, 65, 85, 0.85); color: #cbd5e1; }    /* 50未満: ダークグレー */
 
-    /* カード本文 */
-    .card-body { padding: 8px; }
-    .card-title { font-size: 0.7rem; color: #94a3b8; line-height: 1.2; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .card-name { font-size: 0.85rem; font-weight: bold; color: #ffffff; margin: 2px 0 4px 0; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    
-    .card-meta { 
-      font-size: 0.7rem; 
-      color: var(--text-sub); 
+    .dev-high {
+      background: rgba(244, 63, 94, 0.9);
+      color: #ffffff;
+    }
+
+    .dev-mid {
+      background: rgba(245, 158, 11, 0.9);
+      color: #ffffff;
+    }
+
+    .dev-low {
+      background: rgba(51, 65, 85, 0.85);
+      color: #cbd5e1;
+    }
+
+    .banner-container {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+      pointer-events: none;
+    }
+
+    .banner {
+      padding: 3px 6px;
+      border-radius: 4px;
+      font-size: 0.6rem;
+      font-weight: bold;
+      line-height: 1.3;
+      color: #ffffff;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+      white-space: nowrap;
+    }
+
+    .pickup-banner {
+      background: #e11d48;
+    }
+
+    .reference-banner {
+      background: #2563eb;
+    }
+
+    .card-body {
+      padding: 8px;
+    }
+
+    .card-title {
+      font-size: 0.7rem;
+      color: #94a3b8;
+      line-height: 1.2;
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-name {
+      font-size: 0.85rem;
+      font-weight: bold;
+      color: #ffffff;
+      margin: 2px 0 4px 0;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-meta {
+      font-size: 0.7rem;
+      color: var(--text-sub);
       background: rgba(15, 23, 42, 0.5);
       padding: 4px 6px;
       border-radius: 4px;
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 3px;
     }
-    
+
     .meta-row {
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: baseline;
+      gap: 4px;
     }
+
+    .meta-row span:last-child {
+      text-align: right;
+    }
+
     .meta-highlight {
       color: #f43f5e;
       font-weight: bold;
+    }
+
+    .meta-sub {
+      font-size: 0.65rem;
+      color: #94a3b8;
     }
   </style>
 </head>
@@ -165,16 +267,27 @@
   <div id="main-content">
     <div class="header-area">
       <div class="header-title">美少女キャラクターギャラリーサイト</div>
-      
+
       <div class="sort-container">
         <span>並び替え:</span>
         <select id="sort-select" class="sort-select" onchange="sortAndRender()">
-          <option value="deviation-desc">偏差値（高い順）</option>
+          <option value="total-dev-desc">投稿数偏差値（高い順）</option>
+          <option value="views-dev-desc">閲覧数偏差値（高い順）</option>
           <option value="total-desc">投稿数（多い順）</option>
           <option value="views-desc">閲覧数（多い順）</option>
+          <option value="deviation-desc">総合偏差値（高い順）</option>
           <option value="title-asc">作品名（五十音順）</option>
           <option value="random">ランダム</option>
         </select>
+
+        <button
+          id="random-reset-btn"
+          class="random-reset-btn"
+          type="button"
+          onclick="resetRandom()"
+        >
+          ランダムをリセット
+        </button>
       </div>
     </div>
 
@@ -186,60 +299,145 @@
     const SPREADSHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSd_7yNBPFl0D0UXvSbCCeUvU_9MJ4OoboLxkbsUVCxEpKe1wl1S6rrVHE5jMmujdQBu9j8KgmMlbUo/pub?output=csv";
 
     let allCharacterData = [];
+    let randomOrder = [];
 
     document.addEventListener("DOMContentLoaded", () => {
       loadGalleryData();
     });
 
+    function parseNumber(value) {
+      if (value === undefined || value === null || value === "") {
+        return null;
+      }
+
+      const num = parseFloat(
+        String(value)
+          .replace(/,/g, '')
+          .replace(/%/g, '')
+          .replace(/％/g, '')
+          .trim()
+      );
+
+      return isNaN(num) ? null : num;
+    }
+
+    function formatNumber(value) {
+      return value === null || value === undefined
+        ? '-'
+        : value.toLocaleString('ja-JP');
+    }
+
+    function formatDeviation(value) {
+      return value === null || value === undefined
+        ? '-'
+        : value.toFixed(1);
+    }
+
+    function formatSignedNumber(value) {
+      if (value === null || value === undefined) return '-';
+
+      const sign = value > 0 ? '+' : '';
+      return sign + value.toLocaleString('ja-JP');
+    }
+
+    function escapeHTML(value) {
+      return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
     async function loadGalleryData() {
       const debugDiv = document.getElementById('debug-msg');
+
       try {
         const response = await fetch(SPREADSHEET_CSV_URL);
-        if (!response.ok) throw new Error(`HTTPエラー! ステータス: ${response.status}`);
-        
+
+        if (!response.ok) {
+          throw new Error(`HTTPエラー! ステータス: ${response.status}`);
+        }
+
         const csvText = await response.text();
 
         const rows = csvText.split(/\r?\n/).map(row => {
-          return row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(cell => cell.replace(/^"|"$/g, '').trim());
+          return row
+            .split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/)
+            .map(cell => cell.replace(/^"|"$/g, '').trim());
         }).filter(row => row.length > 1 && row.some(cell => cell !== ""));
 
         if (rows.length <= 1) {
-          if (debugDiv) debugDiv.innerText = "⚠️ データが見つかりません。スプレッドシートを確認してください。";
+          if (debugDiv) {
+            debugDiv.innerText = "⚠️ データが見つかりません。スプレッドシートを確認してください。";
+          }
           return;
         }
 
         allCharacterData = [];
+
         for (let i = 1; i < rows.length; i++) {
           const row = rows[i];
-          
-          const totalNum   = parseInt((row[3] || "0").replace(/,/g, ''), 10);
-          const r18Num     = parseInt((row[4] || "0").replace(/,/g, ''), 10);
-          const rateNum    = parseFloat((row[5] || "0").replace('%', '').replace(/,/g, ''));
-          const viewsNum   = parseInt((row[8] || "0").replace(/,/g, ''), 10); // I列（index 8）
-          const devNum     = row[10] ? parseFloat(row[10].replace(/,/g, '')) : null; // K列（index 10）
-          
-          const updateDate = row[7] || '未入力';
+
+          /*
+           * スプレッドシート列対応
+           * A=0, B=1, ... Z=25
+           *
+           * D列：投稿数
+           * E列：閲覧数
+           * I列：期間区分
+           * L列：投稿数偏差値
+           * M列：閲覧数偏差値
+           * P列：投稿スコア期待値
+           * Q列：閲覧スコア期待値
+           * T列：潜在需要差
+           * U列：総合偏差値
+           */
+
+          const totalNum = parseNumber(row[3]);       // D列：投稿数
+          const viewsNum = parseNumber(row[4]);       // E列：閲覧数
+          const releaseDate = row[6] || '時期不明';   // G列
+          const inputDate = row[7] || '未入力';       // H列
+          const category = row[8] || '';              // I列
+
+          const postDeviation = parseNumber(row[11]);  // L列
+          const viewsDeviation = parseNumber(row[12]); // M列
+          const postExpected = parseNumber(row[15]);   // P列
+          const viewsExpected = parseNumber(row[16]);  // Q列
+          const demandGap = parseNumber(row[19]);      // T列
+          const totalDeviation = parseNumber(row[20]);  // U列
 
           allCharacterData.push({
-            title:       row[0] || '作品名未設定',
-            name:        row[1] || '未設定',
-            imgUrl:      row[2] || '',
-            total:       totalNum,
-            r18:         r18Num,
-            r18RateRaw:  rateNum,
-            r18RateStr:  row[5] || '0%',
-            releaseDate: row[6] || '時期不明',
-            inputDate:   updateDate,
-            views:       viewsNum,
-            deviation:   isNaN(devNum) ? null : devNum
+            title: row[0] || '作品名未設定',
+            name: row[1] || '未設定',
+            imgUrl: row[2] || '',
+
+            total: totalNum ?? 0,
+            releaseDate,
+            inputDate,
+            views: viewsNum ?? 0,
+            category,
+
+            postDeviation,
+            viewsDeviation,
+            totalDeviation,
+
+            postExpected,
+            viewsExpected,
+            demandGap
           });
         }
 
+        randomOrder = [];
         sortAndRender();
-        if (debugDiv) debugDiv.style.display = 'none';
+
+        if (debugDiv) {
+          debugDiv.style.display = 'none';
+        }
 
       } catch (err) {
         console.error("データ取得エラー:", err);
+
         if (debugDiv) {
           debugDiv.style.color = '#ef4444';
           debugDiv.innerText = "❌ エラーが発生しました:\n" + err.message;
@@ -247,74 +445,189 @@
       }
     }
 
+    function getDeviationClass(deviation) {
+      if (deviation === null || deviation === undefined) {
+        return 'dev-low';
+      }
+
+      if (deviation >= 60) {
+        return 'dev-high';
+      }
+
+      if (deviation >= 50) {
+        return 'dev-mid';
+      }
+
+      return 'dev-low';
+    }
+
+    function getDeviationBadge(deviation) {
+      if (deviation === null || deviation === undefined) {
+        return '';
+      }
+
+      return `<div class="dev-badge ${getDeviationClass(deviation)}">
+        総合 ${formatDeviation(deviation)}
+      </div>`;
+    }
+
+    function getBannerHTML(item) {
+      let html = '';
+
+      // T列：潜在需要差が5以上
+      if (item.demandGap !== null && item.demandGap >= 5) {
+        html += '<span class="banner pickup-banner">ピックアップ</span>';
+      }
+
+      // I列：01_1年以内
+      if (item.category === '01_1年以内') {
+        html += '<span class="banner reference-banner">参考</span>';
+      }
+
+      return html ? `<div class="banner-container">${html}</div>` : '';
+    }
+
+    function getGapHTML(actual, expected) {
+      if (actual === null || expected === null) {
+        return '';
+      }
+
+      const gap = actual - expected;
+
+      return `<span class="meta-sub">期待値乖離 ${formatSignedNumber(gap)}</span>`;
+    }
+
+    function getMetaRow(label, actual, deviation, expected) {
+      return `
+        <div class="meta-row">
+          <span>${label}:</span>
+          <span>
+            ${formatNumber(actual)}
+            <br>
+            <span class="meta-sub">偏差値 ${formatDeviation(deviation)}</span>
+            <br>
+            ${getGapHTML(actual, expected)}
+          </span>
+        </div>
+      `;
+    }
+
     function sortAndRender() {
       const sortValue = document.getElementById('sort-select').value;
       let sortedData = [...allCharacterData];
 
-      if (sortValue === 'deviation-desc') {
-        sortedData.sort((a, b) => (b.deviation ?? -999) - (a.deviation ?? -999));
-      } else if (sortValue === 'title-asc') {
-        sortedData.sort((a, b) => a.title.localeCompare(b.title, 'ja'));
+      if (sortValue === 'total-dev-desc') {
+        sortedData.sort((a, b) =>
+          (b.postDeviation ?? -999) - (a.postDeviation ?? -999)
+        );
+      } else if (sortValue === 'views-dev-desc') {
+        sortedData.sort((a, b) =>
+          (b.viewsDeviation ?? -999) - (a.viewsDeviation ?? -999)
+        );
       } else if (sortValue === 'total-desc') {
         sortedData.sort((a, b) => b.total - a.total);
       } else if (sortValue === 'views-desc') {
         sortedData.sort((a, b) => b.views - a.views);
-      } else {
-        // デフォルト: ランダム
-        for (let i = sortedData.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [sortedData[i], sortedData[j]] = [sortedData[j], sortedData[i]];
+      } else if (sortValue === 'deviation-desc') {
+        sortedData.sort((a, b) =>
+          (b.totalDeviation ?? -999) - (a.totalDeviation ?? -999)
+        );
+      } else if (sortValue === 'title-asc') {
+        sortedData.sort((a, b) => a.title.localeCompare(b.title, 'ja'));
+      } else if (sortValue === 'random') {
+        if (
+          randomOrder.length !== allCharacterData.length ||
+          !randomOrder.every(item => allCharacterData.includes(item))
+        ) {
+          randomOrder = [...allCharacterData];
+
+          for (let i = randomOrder.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [randomOrder[i], randomOrder[j]] = [randomOrder[j], randomOrder[i]];
+          }
         }
+
+        sortedData = [...randomOrder];
       }
 
+      const resetBtn = document.getElementById('random-reset-btn');
+
+      if (resetBtn) {
+        resetBtn.style.display = sortValue === 'random' ? 'inline-block' : 'none';
+      }
+
+      renderGallery(sortedData);
+    }
+
+    function resetRandom() {
+      randomOrder = [];
+
+      if (document.getElementById('sort-select').value !== 'random') {
+        document.getElementById('sort-select').value = 'random';
+      }
+
+      sortAndRender();
+    }
+
+    function renderGallery(sortedData) {
       const grid = document.getElementById('gallery-grid');
       grid.innerHTML = '';
 
       sortedData.forEach(item => {
         const card = document.createElement('div');
         card.className = 'card';
-        
-        const imageHTML = item.imgUrl ? 
-          `<img src="${item.imgUrl}" alt="${item.name}" onerror="this.onerror=null; this.parentNode.innerHTML='<div class=\\'no-img-box\\'>NO IMAGE</div>';">` : 
-          `<div class="no-img-box">NO IMAGE</div>`;
 
-        // 偏差値バッジの処理
-        let devBadgeHTML = '';
-        if (item.deviation !== null) {
-          let devClass = 'dev-low';
-          if (item.deviation >= 60) {
-            devClass = 'dev-high';
-          } else if (item.deviation >= 50) {
-            devClass = 'dev-mid';
-          }
-          devBadgeHTML = `<div class="dev-badge ${devClass}">SS ${item.deviation.toFixed(1)}</div>`;
-        }
+        const safeTitle = escapeHTML(item.title);
+        const safeName = escapeHTML(item.name);
+
+        const imageHTML = item.imgUrl
+          ? `<img src="${escapeHTML(item.imgUrl)}" alt="${safeName}" onerror="this.onerror=null; this.parentNode.innerHTML='<div class=&quot;no-img-box&quot;>NO IMAGE</div>';">`
+          : `<div class="no-img-box">NO IMAGE</div>`;
+
+        const devBadgeHTML = getDeviationBadge(item.totalDeviation);
+        const bannerHTML = getBannerHTML(item);
 
         card.innerHTML = `
           <div class="card-img-wrapper">
             ${devBadgeHTML}
+            ${bannerHTML}
             ${imageHTML}
           </div>
+
           <div class="card-body">
-            <div class="card-title" title="${item.title}">${item.title}</div>
-            <div class="card-name" title="${item.name}">${item.name}</div>
-            
+            <div class="card-title" title="${safeTitle}">
+              ${safeTitle}
+            </div>
+
+            <div class="card-name" title="${safeName}">
+              ${safeName}
+            </div>
+
             <div class="card-meta">
+              ${getMetaRow(
+                '投稿数',
+                item.total,
+                item.postDeviation,
+                item.postExpected
+              )}
+
+              ${getMetaRow(
+                '閲覧数',
+                item.views,
+                item.viewsDeviation,
+                item.viewsExpected
+              )}
+
               <div class="meta-row">
-                <span>投稿数:</span>
-                <span>${item.total.toLocaleString()}</span>
-              </div>
-              <div class="meta-row">
-                <span>閲覧数:</span>
-                <span>${item.views.toLocaleString()}</span>
-              </div>
-              <div class="meta-row">
-                <span>需要偏差値:</span>
-                <span class="meta-highlight">${item.deviation !== null ? item.deviation.toFixed(1) : '-'}</span>
+                <span>総合偏差値:</span>
+                <span class="meta-highlight">
+                  ${formatDeviation(item.totalDeviation)}
+                </span>
               </div>
             </div>
           </div>
         `;
+
         grid.appendChild(card);
       });
     }
