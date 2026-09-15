@@ -106,6 +106,10 @@
       }
     }
 
+    .card-wrapper {
+      min-width: 0;
+    }
+
     .card {
       background-color: var(--card-bg);
       border-radius: 8px;
@@ -262,6 +266,18 @@
       color: #f43f5e;
       font-weight: bold;
     }
+
+    .card-date {
+      margin-top: 4px;
+      padding: 0 4px;
+      color: #94a3b8;
+      font-size: 0.62rem;
+      line-height: 1.4;
+      text-align: right;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   </style>
 </head>
 <body>
@@ -353,7 +369,11 @@
       const debugDiv = document.getElementById('debug-msg');
 
       try {
-        const response = await fetch(SPREADSHEET_CSV_URL);
+        const csvUrl = `${SPREADSHEET_CSV_URL}&_=${Date.now()}`;
+
+        const response = await fetch(csvUrl, {
+          cache: 'no-store'
+        });
 
         if (!response.ok) {
           throw new Error(`HTTPエラー! ステータス: ${response.status}`);
@@ -386,8 +406,12 @@
            * スプレッドシート列対応
            * A=0, B=1, ... Z=25
            *
+           * A列：作品名
+           * B列：キャラ名
+           * C列：画像URL
            * D列：投稿数
            * E列：閲覧数
+           * F列：記事作成日時
            * G列：発売時期
            * H列：入力日
            * I列：期間区分
@@ -401,6 +425,11 @@
 
           const totalNum = parseNumber(row[3]);
           const viewsNum = parseNumber(row[4]);
+
+          const articleDate = row[5]
+            ? String(row[5]).trim()
+            : '';
+
           const releaseDate = row[6] || '時期不明';
           const inputDate = row[7] || '未入力';
           const category = row[8] || '';
@@ -415,12 +444,14 @@
           allCharacterData.push({
             title: row[0] || '作品名未設定',
             name: row[1] || '未設定',
-            imgUrl: row[2] || '',
+            imgUrl: row[2] ? String(row[2]).trim() : '',
 
             total: totalNum ?? 0,
+            views: viewsNum ?? 0,
+
+            articleDate,
             releaseDate,
             inputDate,
-            views: viewsNum ?? 0,
             category,
 
             postDeviation,
@@ -554,6 +585,7 @@
 
           for (let i = randomOrder.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
+
             [randomOrder[i], randomOrder[j]] = [
               randomOrder[j],
               randomOrder[i]
@@ -591,6 +623,9 @@
       grid.innerHTML = '';
 
       sortedData.forEach(item => {
+        const cardWrapper = document.createElement('div');
+        cardWrapper.className = 'card-wrapper';
+
         const card = document.createElement('div');
         card.className = 'card';
 
@@ -598,11 +633,26 @@
         const safeName = escapeHTML(item.name);
 
         const imageHTML = item.imgUrl
-          ? `<img src="${escapeHTML(item.imgUrl)}" alt="${safeName}" onerror="this.onerror=null; this.parentNode.innerHTML='<div class=&quot;no-img-box&quot;>NO IMAGE</div>';">`
+          ? `
+            <img
+              src="${escapeHTML(item.imgUrl)}"
+              alt="${safeName}"
+              loading="lazy"
+              onerror="
+                console.error('画像取得失敗:', this.src);
+                this.onerror=null;
+                this.parentNode.innerHTML='<div class=&quot;no-img-box&quot;>NO IMAGE</div>';
+              "
+            >
+          `
           : `<div class="no-img-box">NO IMAGE</div>`;
 
         const devBadgeHTML = getDeviationBadge(item);
         const bannerHTML = getBannerHTML(item);
+
+        const dateHTML = item.articleDate
+          ? `<div class="card-date">記事作成日時：${escapeHTML(item.articleDate)}</div>`
+          : '';
 
         card.innerHTML = `
           <div class="card-img-wrapper">
@@ -641,7 +691,16 @@
           </div>
         `;
 
-        grid.appendChild(card);
+        cardWrapper.appendChild(card);
+
+        if (dateHTML) {
+          const dateElement = document.createElement('div');
+          dateElement.className = 'card-date';
+          dateElement.textContent = `記事作成日時：${item.articleDate}`;
+          cardWrapper.appendChild(dateElement);
+        }
+
+        grid.appendChild(cardWrapper);
       });
     }
   </script>
