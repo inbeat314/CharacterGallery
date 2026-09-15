@@ -106,10 +106,6 @@
       }
     }
 
-    .card-wrapper {
-      min-width: 0;
-    }
-
     .card {
       background-color: var(--card-bg);
       border-radius: 8px;
@@ -268,8 +264,7 @@
     }
 
     .card-date {
-      margin-top: 4px;
-      padding: 0 4px;
+      margin-top: 6px;
       color: #94a3b8;
       font-size: 0.62rem;
       line-height: 1.4;
@@ -402,27 +397,6 @@
         for (let i = 1; i < rows.length; i++) {
           const row = rows[i];
 
-          /*
-           * スプレッドシート列対応
-           * A=0, B=1, ... Z=25
-           *
-           * A列：作品名
-           * B列：キャラ名
-           * C列：画像URL
-           * D列：投稿数
-           * E列：閲覧数
-           * F列：記事作成日時
-           * G列：発売時期
-           * H列：入力日
-           * I列：期間区分
-           * L列：投稿数偏差値
-           * M列：閲覧数偏差値
-           * P列：投稿スコア期待値
-           * Q列：閲覧スコア期待値
-           * T列：潜在需要差
-           * U列：総合偏差値
-           */
-
           const totalNum = parseNumber(row[3]);
           const viewsNum = parseNumber(row[4]);
 
@@ -528,12 +502,10 @@
     function getBannerHTML(item) {
       let html = '';
 
-      // T列：潜在需要差が5以上
       if (item.demandGap !== null && item.demandGap >= 5) {
         html += '<span class="banner pickup-banner">ピックアップ</span>';
       }
 
-      // I列：01_1年以内
       if (item.category === '01_1年以内') {
         html += '<span class="banner reference-banner">参考</span>';
       }
@@ -623,9 +595,6 @@
       grid.innerHTML = '';
 
       sortedData.forEach(item => {
-        const cardWrapper = document.createElement('div');
-        cardWrapper.className = 'card-wrapper';
-
         const card = document.createElement('div');
         card.className = 'card';
 
@@ -688,19 +657,12 @@
                 </span>
               </div>
             </div>
+
+            ${dateHTML}
           </div>
         `;
 
-        cardWrapper.appendChild(card);
-
-        if (dateHTML) {
-          const dateElement = document.createElement('div');
-          dateElement.className = 'card-date';
-          dateElement.textContent = `記事作成日時：${item.articleDate}`;
-          cardWrapper.appendChild(dateElement);
-        }
-
-        grid.appendChild(cardWrapper);
+        grid.appendChild(card);
       });
     }
   </script>
