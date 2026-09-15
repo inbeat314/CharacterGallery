@@ -495,21 +495,14 @@
       return html ? `<div class="banner-container">${html}</div>` : '';
     }
 
-  function getGapHTML(actual, expected) {
-  if (
-    actual === null ||
-    expected === null ||
-    isNaN(actual) ||
-    isNaN(expected) ||
-    expected === 0
-  ) {
+function getGapHTML(expected) {
+  if (expected === null || expected === undefined || isNaN(expected)) {
     return '-';
   }
 
-  const gapPercent = ((Number(actual) - Number(expected)) / Number(expected)) * 100;
-  const sign = gapPercent > 0 ? '+' : '';
+  const sign = expected > 0 ? '+' : '';
 
-  return `${sign}${gapPercent.toFixed(1)}%`;
+  return `${sign}${Number(expected).toFixed(1)}%`;
 }
 
 function getMetaRow(label, actual, deviation, expected) {
@@ -520,7 +513,7 @@ function getMetaRow(label, actual, deviation, expected) {
         ${formatNumber(actual)}
         <br>
         <span class="meta-sub">
-          （SS ${formatDeviation(deviation)} / ${getGapHTML(actual, expected)}）
+          （SS ${formatDeviation(deviation)} / ${getGapHTML(expected)}）
         </span>
       </span>
     </div>
