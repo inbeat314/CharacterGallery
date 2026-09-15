@@ -249,20 +249,23 @@
 }
 
 .meta-row > span:first-child {
-  flex-shrink: 0;
+  flex: 0 0 auto;
 }
 
 .meta-row > span:last-child {
   min-width: 0;
+  flex: 1;
   text-align: right;
   overflow-wrap: anywhere;
 }
 
 .meta-sub {
-  display: block;
+  display: block !important;
+  margin-top: 2px;
   font-size: 0.85em;
-  color: #777;
+  color: #94a3b8;
   line-height: 1.4;
+  white-space: normal;
 }
   </style>
 </head>
@@ -337,12 +340,7 @@
         : value.toFixed(1);
     }
 
-    function formatSignedNumber(value) {
-      if (value === null || value === undefined) return '-';
-
-      const sign = value > 0 ? '+' : '';
-      return sign + value.toLocaleString('ja-JP');
-    }
+    
 
     function escapeHTML(value) {
       return String(value ?? '')
@@ -502,12 +500,13 @@
   return `${sign}${gapPercent.toFixed(1)}%`;
 }
 
- function getMetaRow(label, actual, deviation, expected) {
+function getMetaRow(label, actual, deviation, expected) {
   return `
     <div class="meta-row">
       <span>${label}:</span>
       <span>
         ${formatNumber(actual)}
+        <br>
         <span class="meta-sub">
           （SS ${formatDeviation(deviation)} / ${getGapHTML(actual, expected)}）
         </span>
