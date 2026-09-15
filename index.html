@@ -240,26 +240,34 @@
       gap: 3px;
     }
 
-    .meta-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      gap: 4px;
-    }
+  .meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
 
-    .meta-row span:last-child {
-      text-align: right;
-    }
+.meta-row > span:first-child {
+  flex-shrink: 0;
+}
 
-    .meta-highlight {
-      color: #f43f5e;
-      font-weight: bold;
-    }
+.meta-row > span:last-child {
+  text-align: right;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
-    .meta-sub {
-      font-size: 0.65rem;
-      color: #94a3b8;
-    }
+.meta-highlight {
+  color: #f43f5e;
+  font-weight: bold;
+}
+
+.meta-sub {
+  font-size: 0.65rem;
+  color: #94a3b8;
+}
   </style>
 </head>
 <body>
@@ -488,29 +496,32 @@
     }
 
     function getGapHTML(actual, expected) {
-      if (actual === null || expected === null) {
-        return '';
-      }
+  if (
+    actual === null ||
+    expected === null ||
+    expected === 0
+  ) {
+    return '-';
+  }
 
-      const gap = actual - expected;
+  const gapPercent = ((actual - expected) / expected) * 100;
 
-      return `<span class="meta-sub">期待値乖離 ${formatSignedNumber(gap)}</span>`;
-    }
+  const sign = gapPercent > 0 ? '+' : '';
+  const formatted = `${sign}${gapPercent.toFixed(1)}%`;
 
-    function getMetaRow(label, actual, deviation, expected) {
-      return `
-        <div class="meta-row">
-          <span>${label}:</span>
-          <span>
-            ${formatNumber(actual)}
-            <br>
-            <span class="meta-sub">偏差値 ${formatDeviation(deviation)}</span>
-            <br>
-            ${getGapHTML(actual, expected)}
-          </span>
-        </div>
-      `;
-    }
+  return formatted;
+}
+
+   function getMetaRow(label, actual, deviation, expected) {
+  return `
+    <div class="meta-row">
+      <span>${label}:</span>
+      <span>
+        ${formatNumber(actual)}（SS ${formatDeviation(deviation)} / ${getGapHTML(actual, expected)}）
+      </span>
+    </div>
+  `;
+}
 
     function sortAndRender() {
       const sortValue = document.getElementById('sort-select').value;
@@ -618,12 +629,12 @@
                 item.viewsExpected
               )}
 
-              <div class="meta-row">
-                <span>総合偏差値:</span>
-                <span class="meta-highlight">
-                  ${formatDeviation(item.totalDeviation)}
-                </span>
-              </div>
+             <div class="meta-row">
+  <span>総合偏差値:</span>
+  <span class="meta-highlight">
+    ${formatDeviation(item.totalDeviation)}
+  </span>
+</div>
             </div>
           </div>
         `;
