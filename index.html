@@ -489,8 +489,12 @@
       return html ? `<div class="banner-container">${html}</div>` : '';
     }
 
-    function getGapHTML(actual, expected) {
-  if (actual === null || expected === null || expected === 0) {
+   function getGapHTML(actual, expected) {
+  if (
+    actual === null ||
+    expected === null ||
+    expected === 0
+  ) {
     return '-';
   }
 
