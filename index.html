@@ -413,7 +413,8 @@
           const postExpected = parseNumber(row[15]);
           const viewsExpected = parseNumber(row[16]);
           const demandGap = parseNumber(row[19]);
-          const totalDeviation = parseNumber(row[20]);
+          const r18Rate = parseNumber(row[22]);
+          const totalDeviation = parseNumber(row[23]);
 
           allCharacterData.push({
             title: row[0] || '作品名未設定',
@@ -430,6 +431,7 @@
 
             postDeviation,
             viewsDeviation,
+            r18Rate,
             totalDeviation,
 
             postExpected,
@@ -649,6 +651,11 @@
                 '閲覧数',
                 item.views
               )}
+
+              <div class="meta-row">
+                <span>R-18率:</span>
+                <span>${item.r18Rate !== null ? formatDeviation(item.r18Rate) + '%' : '-'}</span>
+              </div>
 
               <div class="meta-row">
                 <span>総合偏差値:</span>
