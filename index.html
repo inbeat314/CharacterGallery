@@ -413,6 +413,7 @@
           const postExpected = parseNumber(row[15]);
           const viewsExpected = parseNumber(row[16]);
           const demandGap = parseNumber(row[19]);
+          const r18Count = parseNumber(row[7]);
           const r18Rate = parseNumber(row[22]);
           const totalDeviation = parseNumber(row[23]);
 
@@ -431,6 +432,7 @@
 
             postDeviation,
             viewsDeviation,
+            r18Count,
             r18Rate,
             totalDeviation,
 
@@ -652,9 +654,12 @@
                 item.views
               )}
 
-              <div class="meta-row">
-                <span>R-18率:</span>
-                <span>${item.r18Rate !== null ? formatDeviation(item.r18Rate) + '%' : '-'}</span>
+             <div class="meta-row">
+                <span>R-18投稿数(R-18率):</span>
+                <span>
+                  ${formatNumber(item.r18Count)}
+                  (${formatPercent(item.r18Rate)})
+                </span>
               </div>
 
               <div class="meta-row">
