@@ -351,14 +351,6 @@
       return Number(value).toFixed(1);
     }
 
-    function formatPercent(value) {
-  if (value === null || value === undefined || isNaN(value)) {
-    return '-';
-  }
-
-  return (Number(value) * 100).toFixed(1) + '%';
-}
-
     function escapeHTML(value) {
       return String(value ?? '')
         .replace(/&/g, '&amp;')
@@ -421,8 +413,15 @@
           const postExpected = parseNumber(row[15]);
           const viewsExpected = parseNumber(row[16]);
           const demandGap = parseNumber(row[19]);
+
+          // H列：R-18投稿数
           const r18Count = parseNumber(row[7]);
-          const r18Rate = parseNumber(row[22]);
+
+          // W列：R-18率
+          // スプレッドシート側で計算済みの値をそのまま表示する
+          const r18Rate = row[22] || '-';
+
+          // X列：総合偏差値
           const totalDeviation = parseNumber(row[23]);
 
           allCharacterData.push({
@@ -662,11 +661,11 @@
                 item.views
               )}
 
-             <div class="meta-row">
+              <div class="meta-row">
                 <span>R-18投稿数(R-18率):</span>
                 <span>
                   ${formatNumber(item.r18Count)}
-                  (${formatPercent(item.r18Rate)})
+                  (${escapeHTML(item.r18Rate)})
                 </span>
               </div>
 
