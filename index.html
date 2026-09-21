@@ -526,12 +526,8 @@
         label = '閲覧';
         deviation = item.viewsDeviation;
       } else if (sortValue === 'r18-desc') {
-        // R-18投稿数ソート時は「R-18」ラベルと投稿数を表示
-        return `
-          <div class="dev-badge dev-high">
-            成人 ${formatNumber(item.r18Deviation)}
-          </div>
-        `;
+        label = '成人';
+        deviation = item.r18Deviation;
       } else if (sortValue === 'deviation-desc') {
         label = '総合';
         deviation = item.totalDeviation;
