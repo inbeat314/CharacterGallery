@@ -413,21 +413,25 @@
           const inputDate = row[7] || '未入力';
           const category = row[8] || '';
 
-          const postDeviation = parseNumber(row[11]);
-          const viewsDeviation = parseNumber(row[12]);
-          const postExpected = parseNumber(row[15]);
-          const viewsExpected = parseNumber(row[16]);
-          const demandGap = parseNumber(row[19]);
+          const postDeviation = parseNumber(row[13]);
+          const viewsDeviation = parseNumber(row[14]);
+          //const postExpected = parseNumber(row[15]);
+          //const viewsExpected = parseNumber(row[16]);
+          const demandGap = parseNumber(row[21]);
 
           // H列(インデックス7)：R-18投稿数
           const r18Count = parseNumber(row[7]);
+
+          //R-18投稿数偏差値
+          const r18Deviation = parseNumber(row[25]);
+
 
           // W列(インデックス22)：R-18率
           const r18Rate = row[22] || '-';
           const r18RateNum = parseNumber(row[22]); // 数値比較用にパース
 
           // X列(インデックス23)：総合偏差値
-          const totalDeviation = parseNumber(row[23]);
+          const totalDeviation = parseNumber(row[26]);
 
           allCharacterData.push({
             title: row[0] || '作品名未設定',
@@ -445,12 +449,13 @@
             postDeviation,
             viewsDeviation,
             r18Count: r18Count ?? 0,
+            r18Deviation,
             r18Rate,
             r18RateNum: r18RateNum ?? 0,
             totalDeviation,
 
-            postExpected,
-            viewsExpected,
+            //postExpected,
+            //viewsExpected,
             demandGap
           });
         }
@@ -524,7 +529,7 @@
         // R-18投稿数ソート時は「R-18」ラベルと投稿数を表示
         return `
           <div class="dev-badge dev-high">
-            R-18 ${formatNumber(item.r18Count)}
+            R-18 ${formatNumber(item.r18Deviation)}
           </div>
         `;
       } else if (sortValue === 'deviation-desc') {
