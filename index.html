@@ -662,12 +662,16 @@
               )}
 
               <div class="meta-row">
-                <span>R-18投稿数(率):</span>
-                <span>
-                  ${formatNumber(item.r18Count)}
-                  (${escapeHTML(item.r18Rate)})
-                </span>
-              </div>
+  <span>R-18投稿数:</span>
+  <span>
+    ${formatNumber(item.r18Count)}
+  </span>
+</div>
+
+${getMetaRow(
+  'R-18率',
+  item.r18Rate
+)}
 
               <div class="meta-row">
                 <span>総合偏差値:</span>
