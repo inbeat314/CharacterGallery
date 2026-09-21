@@ -409,14 +409,14 @@
             ? String(row[5]).trim()
             : '';
 
-          const releaseDate = row[6] || '時期不明';
-          const inputDate = row[7] || '未入力';
+       
+         
           const category = row[9] || '';
 
           const postDeviation = parseNumber(row[12]);
           const viewsDeviation = parseNumber(row[13]);
-          //const postExpected = parseNumber(row[15]);
-          //const viewsExpected = parseNumber(row[16]);
+         
+          
           const demandGap = parseNumber(row[20]);
 
           // H列(インデックス7)：R-18投稿数
@@ -442,8 +442,8 @@
             views: viewsNum ?? 0,
 
             articleDate,
-            releaseDate,
-            inputDate,
+            
+         
             category,
 
             postDeviation,
@@ -454,8 +454,8 @@
             r18RateNum: r18RateNum ?? 0,
             totalDeviation,
 
-            //postExpected,
-            //viewsExpected,
+            
+           
             demandGap
           });
         }
