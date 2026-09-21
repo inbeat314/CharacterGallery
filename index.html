@@ -351,6 +351,14 @@
       return Number(value).toFixed(1);
     }
 
+    function formatPercent(value) {
+  if (value === null || value === undefined || isNaN(value)) {
+    return '-';
+  }
+
+  return (Number(value) * 100).toFixed(1) + '%';
+}
+
     function escapeHTML(value) {
       return String(value ?? '')
         .replace(/&/g, '&amp;')
