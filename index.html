@@ -413,17 +413,17 @@
           const inputDate = row[7] || '未入力';
           const category = row[8] || '';
 
-          const postDeviation = parseNumber(row[13]);
-          const viewsDeviation = parseNumber(row[14]);
+          const postDeviation = parseNumber(row[12]);
+          const viewsDeviation = parseNumber(row[13]);
           //const postExpected = parseNumber(row[15]);
           //const viewsExpected = parseNumber(row[16]);
-          const demandGap = parseNumber(row[21]);
+          const demandGap = parseNumber(row[20]);
 
           // H列(インデックス7)：R-18投稿数
           const r18Count = parseNumber(row[7]);
 
           //R-18投稿数偏差値
-          const r18Deviation = parseNumber(row[25]);
+          const r18Deviation = parseNumber(row[24]);
 
 
           // W列(インデックス22)：R-18率
@@ -431,7 +431,7 @@
           const r18RateNum = parseNumber(row[22]); // 数値比較用にパース
 
           // X列(インデックス23)：総合偏差値
-          const totalDeviation = parseNumber(row[26]);
+          const totalDeviation = parseNumber(row[25]);
 
           allCharacterData.push({
             title: row[0] || '作品名未設定',
