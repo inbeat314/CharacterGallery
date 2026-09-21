@@ -199,6 +199,10 @@
       background: #7c3aed;
     }
 
+    .r18-banner {
+      background: #e11d48; /* R-18人気用の濃いピンク/赤系 */
+    }
+
     .reference-banner {
       background: #2563eb;
     }
@@ -288,6 +292,7 @@
           <option value="deviation-desc">総合偏差値（高い順）</option>
           <option value="total-dev-desc">投稿数（高い順）</option>
           <option value="views-dev-desc">閲覧数（高い順）</option>
+          <option value="r18-desc">R-18投稿数（高い順）</option>
           <option value="title-asc">作品名（五十音順）</option>
           <option value="random">ランダム</option>
         </select>
@@ -414,14 +419,14 @@
           const viewsExpected = parseNumber(row[16]);
           const demandGap = parseNumber(row[19]);
 
-          // H列：R-18投稿数
+          // H列(インデックス7)：R-18投稿数
           const r18Count = parseNumber(row[7]);
 
-          // W列：R-18率
-          // スプレッドシート側で計算済みの値をそのまま表示する
+          // W列(インデックス22)：R-18率
           const r18Rate = row[22] || '-';
+          const r18RateNum = parseNumber(row[22]); // 数値比較用にパース
 
-          // X列：総合偏差値
+          // X列(インデックス23)：総合偏差値
           const totalDeviation = parseNumber(row[23]);
 
           allCharacterData.push({
@@ -439,8 +444,9 @@
 
             postDeviation,
             viewsDeviation,
-            r18Count,
+            r18Count: r18Count ?? 0,
             r18Rate,
+            r18RateNum: r18RateNum ?? 0,
             totalDeviation,
 
             postExpected,
@@ -448,6 +454,9 @@
             demandGap
           });
         }
+
+        // R-18率上位20%（あるいは上位5件など）のフラグ判定処理
+        markTopR18Characters();
 
         randomOrder = [];
         sortAndRender();
@@ -464,6 +473,23 @@
           debugDiv.innerText = "❌ エラーが発生しました:\n" + err.message;
         }
       }
+    }
+
+    function markTopR18Characters() {
+      if (allCharacterData.length === 0) return;
+
+      // R-18率（数値）で降順ソート
+      const sortedByRate = [...allCharacterData].sort((a, b) => b.r18RateNum - a.r18RateNum);
+
+      // 全体の20%（最低3件〜）を「R-18人気」対象とする
+      const topCount = Math.max(3, Math.floor(allCharacterData.length * 0.2));
+
+      //上位のしきい値となるR-18率を取得（かつ率が0より大きいこと）
+      const thresholdRate = sortedByRate[topCount - 1] ? sortedByRate[topCount - 1].r18RateNum : 0;
+
+      allCharacterData.forEach(item => {
+        item.isR18Top = item.r18RateNum > 0 && item.r18RateNum >= thresholdRate;
+      });
     }
 
     function getDeviationClass(deviation) {
@@ -494,6 +520,13 @@
       } else if (sortValue === 'views-dev-desc') {
         label = '閲覧';
         deviation = item.viewsDeviation;
+      } else if (sortValue === 'r18-desc') {
+        // R-18投稿数ソート時は「R-18」ラベルと投稿数を表示
+        return `
+          <div class="dev-badge dev-high">
+            R-18 ${formatNumber(item.r18Count)}
+          </div>
+        `;
       } else if (sortValue === 'deviation-desc') {
         label = '総合';
         deviation = item.totalDeviation;
@@ -515,6 +548,11 @@
 
       if (item.demandGap !== null && item.demandGap >= 5) {
         html += '<span class="banner pickup-banner">ピックアップ</span>';
+      }
+
+      // R-18人気バッチの追加
+      if (item.isR18Top) {
+        html += '<span class="banner r18-banner">R-18人気</span>';
       }
 
       if (item.category === '01_1年以内') {
@@ -547,6 +585,8 @@
         sortedData.sort((a, b) =>
           (b.viewsDeviation ?? -999) - (a.viewsDeviation ?? -999)
         );
+      } else if (sortValue === 'r18-desc') {
+        sortedData.sort((a, b) => (b.r18Count ?? 0) - (a.r18Count ?? 0));
       } else if (sortValue === 'total-desc') {
         sortedData.sort((a, b) => b.total - a.total);
       } else if (sortValue === 'views-desc') {
@@ -651,27 +691,18 @@
             </div>
 
             <div class="card-meta">
-              ${getMetaRow(
-                '投稿数',
-                item.total
-              )}
-
-              ${getMetaRow(
-                '閲覧数',
-                item.views
-              )}
+              ${getMetaRow('投稿数', item.total)}
+              ${getMetaRow('閲覧数', item.views)}
 
               <div class="meta-row">
-  <span>R-18投稿数:</span>
-  <span>
-    ${formatNumber(item.r18Count)}
-  </span>
-</div>
+                <span>R-18投稿数:</span>
+                <span>${formatNumber(item.r18Count)}</span>
+              </div>
 
-<div class="meta-row">
-  <span>R-18率:</span>
-  <span>${escapeHTML(item.r18Rate)}</span>
-</div>
+              <div class="meta-row">
+                <span>R-18率:</span>
+                <span>${escapeHTML(item.r18Rate)}</span>
+              </div>
 
               <div class="meta-row">
                 <span>総合偏差値:</span>
