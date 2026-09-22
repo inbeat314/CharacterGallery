@@ -537,7 +537,11 @@
       } else if (sortValue === 'views-dev-desc') {
         label = '閲覧';
         deviation = item.viewsDeviation;
-      } else if (sortValue === 'r18-desc') {
+      } else if (
+        sortValue === 'r18-desc' ||
+        sortValue === 'r18-divergence-desc'
+      ) {
+        // R-18偏差値ソート／R-18乖離ソートでは同じ「成人」バナーを表示
         label = '成人';
         deviation = item.r18Deviation;
       } else if (sortValue === 'deviation-desc') {
