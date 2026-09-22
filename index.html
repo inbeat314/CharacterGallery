@@ -430,6 +430,9 @@
           const r18Rate = row[22] || '-';
           const r18RateNum = parseNumber(row[22]); // 数値比較用にパース
 
+          //総合偏差値ごとのR-18総合偏差値期待値からの乖離
+          const r18Divergence = row[31]
+
           // X列(インデックス23)：総合偏差値
           const totalDeviation = parseNumber(row[25]);
 
@@ -452,6 +455,7 @@
             r18Deviation,
             r18Rate,
             r18RateNum: r18RateNum ?? 0,
+            r18Divergence,
             totalDeviation,
 
             
@@ -483,17 +487,24 @@
     function markTopR18Characters() {
       if (allCharacterData.length === 0) return;
 
-      // R-18率（数値）で降順ソート
-      const sortedByRate = [...allCharacterData].sort((a, b) => b.r18RateNum - a.r18RateNum);
+      // R-18偏差値期待値からの乖離（r18Divergence）で降順ソート
+      const sortedByDivergence = [...allCharacterData].sort(
+        (a, b) => (b.r18Divergence ?? -999) - (a.r18Divergence ?? -999)
+      );
 
       // 全体の20%（最低3件〜）を「R-18人気」対象とする
       const topCount = Math.max(3, Math.floor(allCharacterData.length * 0.2));
 
-      //上位のしきい値となるR-18率を取得（かつ率が0より大きいこと）
-      const thresholdRate = sortedByRate[topCount - 1] ? sortedByRate[topCount - 1].r18RateNum : 0;
+      // 上位のしきい値となるr18Divergenceを取得
+      const thresholdDivergence =
+        sortedByDivergence[topCount - 1]?.r18Divergence ?? null;
 
       allCharacterData.forEach(item => {
-        item.isR18Top = item.r18RateNum > 0 && item.r18RateNum >= thresholdRate;
+        item.isR18Top =
+          thresholdDivergence !== null &&
+          item.r18Divergence !== null &&
+          item.r18Divergence !== undefined &&
+          item.r18Divergence >= thresholdDivergence;
       });
     }
 
