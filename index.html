@@ -293,6 +293,7 @@
           <option value="total-dev-desc">投稿数（高い順）</option>
           <option value="views-dev-desc">閲覧数（高い順）</option>
           <option value="r18-desc">R-18偏差値（高い順）</option>
+          <option value="r18-divergence-desc">R-18人気（高い順）</option>
           <option value="title-asc">作品名（五十音順）</option>
           <option value="random">ランダム</option>
         </select>
@@ -599,6 +600,10 @@
         );
       } else if (sortValue === 'r18-desc') {
         sortedData.sort((a, b) => (b.r18Deviation ?? 0) - (a.r18Deviation ?? 0));
+      } else if (sortValue === 'r18-divergence-desc') {
+        sortedData.sort((a, b) =>
+          (b.r18Divergence ?? -999) - (a.r18Divergence ?? -999)
+        );
       } else if (sortValue === 'total-desc') {
         sortedData.sort((a, b) => b.total - a.total);
       } else if (sortValue === 'views-desc') {
