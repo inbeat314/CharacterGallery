@@ -362,7 +362,6 @@
           <option value="views-dev-desc">閲覧数（高い順）</option>
           <option value="r18-desc">R-18偏差値（高い順）</option>
           <option value="r18-divergence-desc">R-18人気（高い順）</option>
-          <option value="title-asc">作品名（五十音順）</option>
           <option value="random">ランダム</option>
         </select>
 
@@ -703,11 +702,7 @@ if (searchQuery) {
         sortedData.sort((a, b) =>
           (b.totalDeviation ?? -999) - (a.totalDeviation ?? -999)
         );
-      } else if (sortValue === 'title-asc') {
-        sortedData.sort((a, b) =>
-          a.title.localeCompare(b.title, 'ja')
-        );
-      } else if (sortValue === 'random') {
+      }  else if (sortValue === 'random') {
         if (
           randomOrder.length !== allCharacterData.length ||
           !randomOrder.every(item => allCharacterData.includes(item))
