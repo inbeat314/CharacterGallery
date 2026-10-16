@@ -52,6 +52,24 @@
       flex-wrap: wrap;
     }
 
+    .search-input {
+      background-color: #334155;
+      color: #ffffff;
+      border: 1px solid #475569;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      outline: none;
+      min-width: 180px;
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+
+    .search-input::placeholder {
+      color: #cbd5e1;
+      opacity: 0.8;
+    }
+
     .sort-select {
       background-color: #334155;
       color: #ffffff;
@@ -286,6 +304,16 @@
       <div class="header-title">美少女キャラクターギャラリーサイト</div>
 
       <div class="sort-container">
+        <label for="character-search">キャラ名検索:</label>
+        <input
+          id="character-search"
+          class="search-input"
+          type="search"
+          placeholder="キャラ名を入力..."
+          aria-label="B欄キャラ名で検索"
+          oninput="sortAndRender()"
+        >
+
         <span>並び替え:</span>
 
         <select id="sort-select" class="sort-select" onchange="sortAndRender()">
@@ -592,7 +620,21 @@
 
     function sortAndRender() {
       const sortValue = document.getElementById('sort-select').value;
+      const searchQuery = (document.getElementById('character-search')?.value || '')
+        .normalize('NFKC')
+        .trim()
+        .toLocaleLowerCase('ja');
       let sortedData = [...allCharacterData];
+
+      // B欄のキャラ名（name）を対象に、入力文字列を含むデータだけ表示
+      if (searchQuery) {
+        sortedData = sortedData.filter(item =>
+          String(item.name || '')
+            .normalize('NFKC')
+            .toLocaleLowerCase('ja')
+            .includes(searchQuery)
+        );
+      }
 
       if (sortValue === 'total-dev-desc') {
         sortedData.sort((a, b) =>
@@ -665,6 +707,17 @@
     function renderGallery(sortedData) {
       const grid = document.getElementById('gallery-grid');
       grid.innerHTML = '';
+
+      if (sortedData.length === 0) {
+        const emptyMessage = document.createElement('div');
+        emptyMessage.style.gridColumn = '1 / -1';
+        emptyMessage.style.padding = '24px 12px';
+        emptyMessage.style.textAlign = 'center';
+        emptyMessage.style.color = '#cbd5e1';
+        emptyMessage.textContent = '該当するキャラ名が見つかりませんでした。';
+        grid.appendChild(emptyMessage);
+        return;
+      }
 
       sortedData.forEach(item => {
         const card = document.createElement('div');
