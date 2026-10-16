@@ -344,12 +344,12 @@
       <div class="header-title">美少女キャラクターギャラリーサイト</div>
 
       <div class="sort-container">
-        <label for="character-search">キャラ名検索:</label>
+        <label for="character-search">作品名・キャラ名検索:</label>
         <input
           id="character-search"
           class="search-input"
           type="search"
-          placeholder="キャラ名を入力..."
+          placeholder="作品名・キャラ名を入力..."
           aria-label="B欄キャラ名で検索"
           oninput="sortAndRender()"
         >
@@ -666,15 +666,20 @@
         .toLocaleLowerCase('ja');
       let sortedData = [...allCharacterData];
 
-      // B欄のキャラ名（name）を対象に、入力文字列を含むデータだけ表示
-      if (searchQuery) {
-        sortedData = sortedData.filter(item =>
-          String(item.name || '')
-            .normalize('NFKC')
-            .toLocaleLowerCase('ja')
-            .includes(searchQuery)
-        );
-      }
+      // A欄の作品名（title）とB欄のキャラ名（name）の両方を検索
+if (searchQuery) {
+  sortedData = sortedData.filter(item => {
+    const title = String(item.title || '')
+      .normalize('NFKC')
+      .toLocaleLowerCase('ja');
+
+    const name = String(item.name || '')
+      .normalize('NFKC')
+      .toLocaleLowerCase('ja');
+
+    return title.includes(searchQuery) || name.includes(searchQuery);
+  });
+}
 
       if (sortValue === 'total-dev-desc') {
         sortedData.sort((a, b) =>
