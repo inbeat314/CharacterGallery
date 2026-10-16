@@ -52,6 +52,46 @@
       flex-wrap: wrap;
     }
 
+    /* スマートフォンでは検索欄と並び替え欄を別々の行にする */
+@media (max-width: 600px) {
+  .header-area {
+    align-items: stretch;
+  }
+
+  .sort-container {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .sort-container label[for="character-search"] {
+    grid-column: 1 / -1;
+  }
+
+  #character-search {
+    grid-column: 1 / -1;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .sort-container > span {
+    grid-column: 1;
+  }
+
+  #sort-select {
+    grid-column: 2;
+    width: 100%;
+    min-width: 0;
+  }
+
+  #random-reset-btn {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+}
+
     .search-input {
       background-color: #334155;
       color: #ffffff;
